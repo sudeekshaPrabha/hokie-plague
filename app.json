@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "ios": {git 
+    "ios": { 
       "supportsTablet": true
     },
     "android": {
