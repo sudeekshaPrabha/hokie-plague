@@ -15,7 +15,7 @@ export default function App() {
   if (currentScreen === "intro") {
     return (
       <IntroScreen
-        onEnter={() => setCurrentScreen("login")}
+        onFinish={() => setCurrentScreen("login")}
       />
     );
   }
@@ -37,14 +37,11 @@ export default function App() {
     return (
       <JoinGameScreen
         playerName={playerName}
-
         onJoin={(code) => {
           setRoomCode(code);
-          console.log("Joining:", code);
+          setCurrentScreen("queue");
         }}
-
         onNavigate={setCurrentScreen}
-
         onLeave={() => {
           setPlayerName("");
           setRoomCode("");
@@ -61,7 +58,11 @@ export default function App() {
         playerName={playerName}
         roomCode={roomCode}
         onNavigate={setCurrentScreen}
-        onLeave={() => setCurrentScreen("login")}
+        onLeave={() => {
+          setPlayerName("");
+          setRoomCode("");
+          setCurrentScreen("login");
+        }}
       />
     );
   }
@@ -73,7 +74,11 @@ export default function App() {
         playerName={playerName}
         roomCode={roomCode}
         onNavigate={setCurrentScreen}
-        onLeave={() => setCurrentScreen("login")}
+        onLeave={() => {
+          setPlayerName("");
+          setRoomCode("");
+          setCurrentScreen("login");
+        }}
       />
     );
   }
