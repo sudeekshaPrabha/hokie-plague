@@ -1,5 +1,5 @@
 // Distance helper
-
+// Returns location between two persons
 function distanceMeters(a, b){
     const R = 6371000; // Earth's radius in meters
     const toRad = (deg) => (deg*Math.PI) / 180;
