@@ -1,4 +1,4 @@
-import { useEffects, useState} from 'react';
+import { useEffect, useState} from 'react';
 import * as Location from 'expo-location'; 
 
 // Any screen can call useLocation() to get the phone's current position
