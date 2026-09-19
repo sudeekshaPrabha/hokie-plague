@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
+  Pressable,
   StyleSheet,
   SafeAreaView,
-  ActivityIndicator,
 } from "react-native";
 
 import SideNav from "../components/SideNav";
@@ -13,7 +13,32 @@ export default function QueueScreen({
   playerName,
   onNavigate,
   onLeave,
+  onForceStart,
 }) {
+  // TEMPORARY player count until multiplayer is connected
+  const playerCount = 1;
+  const maxPlayers = 8;
+
+  // TEMPORARY countdown
+  const [secondsLeft, setSecondsLeft] = useState(83);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSecondsLeft((current) => {
+        if (current <= 0) {
+          return 0;
+        }
+
+        return current - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const minutes = Math.floor(secondsLeft / 60);
+  const seconds = secondsLeft % 60;
+
   return (
     <SafeAreaView style={styles.screen}>
       {/* HEADER */}
@@ -27,46 +52,80 @@ export default function QueueScreen({
         onLeave={onLeave}
       />
 
-      {/* GREEN PLAGUE DECORATIONS */}
-      <Text style={[styles.plague, styles.plague1]}>〰</Text>
-      <Text style={[styles.plague, styles.plague2]}>〰</Text>
-      <Text style={[styles.plague, styles.plague3]}>〰</Text>
-
       {/* MAIN CONTENT */}
       <View style={styles.content}>
-        <Text style={styles.title}>
-          WAITING FOR PLAYERS
+
+        <Text style={styles.readyText}>
+          GET READY
         </Text>
 
-        {/* PLAYER LIST */}
-        <View style={styles.playerBox}>
-          <Text style={styles.playerTitle}>
+        <Text style={styles.subText}>
+          TO PLAGUE
+        </Text>
+
+        <Text style={styles.orText}>
+          OR
+        </Text>
+
+        <Text style={styles.subText}>
+          BE PLAGUED
+        </Text>
+
+        {/* PLAYER AREA */}
+        <View style={styles.playerArea}>
+
+          <Text style={styles.playerLabel}>
             PLAYERS
           </Text>
 
-          <View style={styles.playerRow}>
-            <View style={styles.greenDot} />
+          <Text style={styles.playerCount}>
+            {playerCount} / {maxPlayers}
+          </Text>
 
-            <Text style={styles.playerName}>
-              {playerName}
-            </Text>
+          {/* PLAYER PROGRESS BAR */}
+          <View style={styles.progressBar}>
+            <View
+              style={[
+                styles.progressFill,
+                {
+                  width: `${(playerCount / maxPlayers) * 100}%`,
+                },
+              ]}
+            />
           </View>
 
-          <Text style={styles.waitingText}>
-            Waiting for more players...
+          <Text style={styles.youText}>
+            {playerName} joined
           </Text>
+
         </View>
 
-        {/* LOADING */}
-        <ActivityIndicator
-          size="large"
-          color="#39FF14"
-          style={styles.loader}
-        />
-
-        <Text style={styles.bottomText}>
-          THE OUTBREAK WILL BEGIN SOON
+        {/* COUNTDOWN */}
+        <Text style={styles.startsText}>
+          GAME STARTS IN
         </Text>
+
+        <Text style={styles.timer}>
+          {minutes}:{seconds.toString().padStart(2, "0")}
+        </Text>
+
+        {/* TEMPORARY FORCE START */}
+        <Pressable
+          style={({ pressed }) => [
+            styles.forceButton,
+            pressed && styles.forcePressed,
+          ]}
+          onPress={onForceStart}
+        >
+          <Text style={styles.forceText}>
+            FORCE START
+          </Text>
+        </Pressable>
+
+        <Text style={styles.devText}>
+          Testing only
+        </Text>
+
       </View>
     </SafeAreaView>
   );
@@ -97,96 +156,114 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     alignItems: "center",
+    paddingTop: 75,
     paddingHorizontal: 30,
-    paddingTop: 80,
   },
 
-  title: {
+  readyText: {
     color: "#FFFFFF",
-    fontSize: 22,
+    fontSize: 34,
+    fontWeight: "900",
+    letterSpacing: 3,
+  },
+
+  subText: {
+    color: "#39FF14",
+    fontSize: 25,
     fontWeight: "900",
     letterSpacing: 2,
-    marginBottom: 30,
+    marginTop: 8,
   },
 
-  playerBox: {
-    width: "85%",
-    backgroundColor: "#202020",
-
-    borderWidth: 2,
-    borderColor: "#39FF14",
-    borderRadius: 15,
-
-    padding: 20,
-  },
-
-  playerTitle: {
-    color: "#E87722",
-    fontSize: 17,
-    fontWeight: "900",
-    marginBottom: 18,
-  },
-
-  playerRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 15,
-  },
-
-  greenDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: "#39FF14",
-    marginRight: 10,
-  },
-
-  playerName: {
+  orText: {
     color: "#FFFFFF",
     fontSize: 18,
-    fontWeight: "700",
-  },
-
-  waitingText: {
-    color: "#888888",
-    fontSize: 15,
-    fontStyle: "italic",
-  },
-
-  loader: {
-    marginTop: 35,
-  },
-
-  bottomText: {
-    color: "#39FF14",
-    fontSize: 14,
     fontWeight: "800",
-    letterSpacing: 1.5,
-    marginTop: 18,
+    marginTop: 5,
   },
 
-  plague: {
-    position: "absolute",
+  playerArea: {
+    width: "88%",
+    marginTop: 55,
+    alignItems: "center",
+  },
+
+  playerLabel: {
+    color: "#FFFFFF",
+    fontSize: 20,
+    fontWeight: "900",
+    letterSpacing: 2,
+  },
+
+  playerCount: {
+    color: "#E87722",
+    fontSize: 24,
+    fontWeight: "900",
+    marginTop: 8,
+  },
+
+  progressBar: {
+    width: "100%",
+    height: 18,
+    backgroundColor: "#181818",
+    borderWidth: 2,
+    borderColor: "#FFFFFF",
+    borderRadius: 20,
+    overflow: "hidden",
+    marginTop: 10,
+  },
+
+  progressFill: {
+    height: "100%",
+    backgroundColor: "#39FF14",
+  },
+
+  youText: {
+    color: "#AAAAAA",
+    fontSize: 15,
+    marginTop: 10,
+  },
+
+  startsText: {
+    color: "#FFFFFF",
+    fontSize: 15,
+    fontWeight: "800",
+    letterSpacing: 2,
+    marginTop: 50,
+  },
+
+  timer: {
     color: "#39FF14",
-    fontSize: 80,
-    zIndex: 0,
+    fontSize: 42,
+    fontWeight: "900",
+    marginTop: 4,
   },
 
-  plague1: {
-    top: 120,
-    left: -5,
-    transform: [{ rotate: "60deg" }],
+  forceButton: {
+    marginTop: 35,
+    backgroundColor: "#861F41",
+    borderWidth: 2,
+    borderColor: "#E87722",
+    borderRadius: 12,
+    paddingVertical: 15,
+    paddingHorizontal: 40,
   },
 
-  plague2: {
-    top: 190,
-    right: -5,
-    transform: [{ rotate: "-60deg" }],
+  forcePressed: {
+    transform: [{ scale: 0.96 }],
+    opacity: 0.8,
   },
 
-  plague3: {
-    bottom: 30,
-    left: 80,
-    transform: [{ rotate: "20deg" }],
+  forceText: {
+    color: "#FFFFFF",
+    fontSize: 17,
+    fontWeight: "900",
+    letterSpacing: 1.5,
+  },
+
+  devText: {
+    color: "#777777",
+    fontSize: 12,
+    marginTop: 7,
   },
 });
