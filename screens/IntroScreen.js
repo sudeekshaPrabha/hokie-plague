@@ -59,7 +59,7 @@ export default function IntroScreen({ onFinish }) {
 
 
   // ======================================================
-  // CRACK VALUES
+  // CRACK ANIMATION VALUES
   // ======================================================
 
   const line1 = useRef(new Animated.Value(0)).current;
@@ -76,26 +76,44 @@ export default function IntroScreen({ onFinish }) {
   const line12 = useRef(new Animated.Value(0)).current;
 
 
-  // Only cracks shake
+  // Entire crack layer
+  const crackOpacity = useRef(
+    new Animated.Value(1)
+  ).current;
+
+
+  // Small crack impact shake
   const shakeX = useRef(
     new Animated.Value(0)
   ).current;
 
 
-  // Black transition overlay
-  const blackFade = useRef(
-    new Animated.Value(0)
+  // ======================================================
+  // TEXT EXIT ANIMATION VALUES
+  // ======================================================
+
+  const virusOpacity = useRef(
+    new Animated.Value(1)
+  ).current;
+
+  const virusScale = useRef(
+    new Animated.Value(1)
+  ).current;
+
+  const otherTextOpacity = useRef(
+    new Animated.Value(1)
   ).current;
 
 
   // ======================================================
-  // INTRO ANIMATION
+  // INTRO SEQUENCE
   // ======================================================
 
   useEffect(() => {
 
     // --------------------------------------------------
-    // CRACKS BEGIN
+    // STEP 1:
+    // CRACKS BEGIN AFTER TEXT IS ALREADY VISIBLE
     // --------------------------------------------------
 
     const crackTimer = setTimeout(() => {
@@ -103,7 +121,7 @@ export default function IntroScreen({ onFinish }) {
       Vibration.vibrate(60);
 
 
-      // Small crack impact shake
+      // Impact shake
       Animated.sequence([
 
         Animated.timing(shakeX, {
@@ -133,7 +151,7 @@ export default function IntroScreen({ onFinish }) {
       ]).start();
 
 
-      // Lines appear one after another
+      // Crack lines spread
       Animated.stagger(70, [
 
         Animated.timing(line1, {
@@ -215,31 +233,66 @@ export default function IntroScreen({ onFinish }) {
 
 
     // --------------------------------------------------
-    // FADE TO BLACK
+    // STEP 2:
+    // ENDING TRANSITION
+    //
+    // cracks disappear
+    // then VIRUS enlarges + fades
     // --------------------------------------------------
 
     const finishTimer = setTimeout(() => {
 
-      Animated.timing(blackFade, {
-
-        toValue: 1,
-
-        duration: 600,
-
-        easing: Easing.inOut(Easing.ease),
-
+      // First fade away all cracks
+      Animated.timing(crackOpacity, {
+        toValue: 0,
+        duration: 300,
+        easing: Easing.out(Easing.ease),
         useNativeDriver: true,
-
       }).start(() => {
 
-        if (onFinish) {
-          onFinish();
-        }
+
+        // Then hide other text and zoom VIRUS toward player
+        Animated.parallel([
+
+          Animated.timing(otherTextOpacity, {
+            toValue: 0,
+            duration: 220,
+            useNativeDriver: true,
+          }),
+
+
+          Animated.timing(virusScale, {
+            toValue: 2.1,
+            duration: 550,
+            easing: Easing.in(Easing.ease),
+            useNativeDriver: true,
+          }),
+
+
+          Animated.timing(virusOpacity, {
+            toValue: 0,
+            duration: 550,
+            easing: Easing.in(Easing.ease),
+            useNativeDriver: true,
+          }),
+
+        ]).start(() => {
+
+          // Intro is finished
+          if (onFinish) {
+            onFinish();
+          }
+
+        });
 
       });
 
-    }, 3400);
+    }, 3200);
 
+
+    // --------------------------------------------------
+    // CLEANUP
+    // --------------------------------------------------
 
     return () => {
       clearTimeout(crackTimer);
@@ -260,22 +313,22 @@ export default function IntroScreen({ onFinish }) {
 
 
       {/* =================================================
-          CRACKS
+          CRACK LAYER
       ================================================= */}
 
       <Animated.View
         pointerEvents="none"
         style={[
           styles.crackLayer,
-
           {
+            opacity: crackOpacity,
+
             transform: [
               {
                 translateX: shakeX,
               },
             ],
           },
-
         ]}
       >
 
@@ -391,45 +444,53 @@ export default function IntroScreen({ onFinish }) {
 
 
       {/* =================================================
-          TEXT
-
-          Locked directly to the middle of the screen.
+          CENTERED TEXT
       ================================================= */}
 
       <Animated.View style={styles.centerArea}>
 
-        <Text style={styles.developerText}>
+
+        {/* VIRUS */}
+        <Animated.Text
+          style={[
+            styles.developerText,
+            {
+              opacity: virusOpacity,
+
+              transform: [
+                {
+                  scale: virusScale,
+                },
+              ],
+            },
+          ]}
+        >
           VIRUS
-        </Text>
+        </Animated.Text>
 
-        <Text style={styles.gameName}>
-          HokiePlague
-        </Text>
 
-        <Text style={styles.tagline}>
-          The plague is spreading...
-        </Text>
+        {/* HOKIEPLAGUE + TAGLINE */}
+        <Animated.View
+          style={[
+            styles.otherText,
+            {
+              opacity: otherTextOpacity,
+            },
+          ]}
+        >
+
+          <Text style={styles.gameName}>
+            HokiePlague
+          </Text>
+
+          <Text style={styles.tagline}>
+            The plague is spreading...
+          </Text>
+
+        </Animated.View>
+
 
       </Animated.View>
-
-
-      {/* =================================================
-          BLACK FADE
-
-          Covers EVERYTHING at the end.
-      ================================================= */}
-
-      <Animated.View
-        pointerEvents="none"
-        style={[
-          styles.blackOverlay,
-
-          {
-            opacity: blackFade,
-          },
-
-        ]}
-      />
 
     </Animated.View>
   );
@@ -483,9 +544,7 @@ const styles = StyleSheet.create({
 
 
   // ====================================================
-  // CENTER TEXT
-  //
-  // This is manually anchored around 50% of the screen.
+  // CENTERED CONTENT
   // ====================================================
 
   centerArea: {
@@ -533,6 +592,13 @@ const styles = StyleSheet.create({
   },
 
 
+  otherText: {
+    width: '100%',
+
+    alignItems: 'center',
+  },
+
+
   gameName: {
     width: '100%',
 
@@ -562,19 +628,6 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
 
     color: '#D0D0D0',
-  },
-
-
-  // ====================================================
-  // BLACK TRANSITION
-  // ====================================================
-
-  blackOverlay: {
-    ...StyleSheet.absoluteFillObject,
-
-    backgroundColor: '#000000',
-
-    zIndex: 999,
   },
 
 });
