@@ -1,14 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
-  TextInput,
   Image,
   Pressable,
   StyleSheet,
   SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
 } from "react-native";
 
 import SideNav from "../components/SideNav";
@@ -19,83 +16,55 @@ export default function JoinGameScreen({
   onNavigate,
   onLeave,
 }) {
-  const [roomCode, setRoomCode] = useState("");
-
   const handleJoin = () => {
-    if (!roomCode.trim()) return;
-
-    const code = roomCode.trim().toUpperCase();
-
-    console.log("Player:", playerName);
-    console.log("Room Code:", code);
+    console.log("Joining game as:", playerName);
 
     if (onJoin) {
-      onJoin(code);
+      onJoin();
     }
   };
 
   return (
     <SafeAreaView style={styles.screen}>
-      <KeyboardAvoidingView
-        style={styles.screen}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
-      >
-        {/* HEADER */}
-        <View style={styles.header}>
-          <Text style={styles.logo}>Hokie Plague</Text>
-        </View>
+      {/* HEADER */}
+      <View style={styles.header}>
+        <Text style={styles.logo}>Hokie Plague</Text>
+      </View>
 
-        {/* SIDE NAV */}
-        <SideNav
-          onNavigate={onNavigate}
-          onLeave={onLeave}
-        />
+      {/* SIDE NAV */}
+      <SideNav
+        onNavigate={onNavigate}
+        onLeave={onLeave}
+      />
 
-        {/* PLAGUE DECORATIONS */}
-        <Text style={[styles.plague, styles.plague1]}>〰</Text>
-        <Text style={[styles.plague, styles.plague2]}>〰</Text>
-        <Text style={[styles.plague, styles.plague3]}>〰</Text>
-        <Text style={[styles.plague, styles.plague4]}>〰</Text>
+      {/* GREEN PLAGUE DECORATIONS */}
+      <Text style={[styles.plague, styles.plague1]}>〰</Text>
+      <Text style={[styles.plague, styles.plague2]}>〰</Text>
+      <Text style={[styles.plague, styles.plague3]}>〰</Text>
+      <Text style={[styles.plague, styles.plague4]}>〰</Text>
+      <Text style={[styles.plague, styles.plague5]}>〰</Text>
 
-        {/* MAIN CONTENT */}
-        <View style={styles.content}>
-          <Text style={styles.welcome}>
-            Welcome, {playerName}
-          </Text>
+      {/* MAIN CONTENT */}
+      <View style={styles.content}>
+        <Text style={styles.welcome}>
+          Welcome, {playerName}
+        </Text>
 
-          <Text style={styles.title}>
-            ENTER GAME CODE
-          </Text>
-
-          <TextInput
-            style={styles.input}
-            placeholder="ROOM CODE"
-            placeholderTextColor="#777777"
-            value={roomCode}
-            onChangeText={setRoomCode}
-            autoCapitalize="characters"
-            autoCorrect={false}
-            maxLength={6}
+        {/* ZOMBIE JOIN BUTTON */}
+        <Pressable
+          onPress={handleJoin}
+          style={({ pressed }) => [
+            styles.joinButton,
+            pressed && styles.pressed,
+          ]}
+        >
+          <Image
+            source={require("../assets/join_button.png")}
+            style={styles.joinImage}
+            resizeMode="contain"
           />
-
-          {/* ZOMBIE JOIN BUTTON */}
-          <Pressable
-            onPress={handleJoin}
-            disabled={!roomCode.trim()}
-            style={({ pressed }) => [
-              styles.joinButton,
-              pressed && styles.pressed,
-              !roomCode.trim() && styles.disabled,
-            ]}
-          >
-            <Image
-              source={require("../assets/join_button.png")}
-              style={styles.joinImage}
-              resizeMode="contain"
-            />
-          </Pressable>
-        </View>
-      </KeyboardAvoidingView>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 }
@@ -131,31 +100,8 @@ const styles = StyleSheet.create({
 
   welcome: {
     color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "600",
-    marginBottom: 10,
-  },
-
-  title: {
-    color: "#FFFFFF",
-    fontSize: 20,
-    fontWeight: "900",
-    letterSpacing: 2,
-    marginBottom: 20,
-  },
-
-  input: {
-    width: "82%",
-    height: 55,
-    backgroundColor: "#202020",
-    borderWidth: 2,
-    borderColor: "#39FF14",
-    borderRadius: 12,
-    color: "#FFFFFF",
     fontSize: 20,
     fontWeight: "700",
-    textAlign: "center",
-    letterSpacing: 4,
     marginBottom: 5,
   },
 
@@ -165,46 +111,48 @@ const styles = StyleSheet.create({
   },
 
   joinImage: {
-    width: 350,
-    height: 280,
+    width: 360,
+    height: 330,
   },
 
   pressed: {
     transform: [{ scale: 0.96 }],
   },
 
-  disabled: {
-    opacity: 0.45,
-  },
-
   plague: {
     position: "absolute",
     color: "#39FF14",
-    fontSize: 90,
+    fontSize: 95,
     zIndex: 0,
   },
 
   plague1: {
     top: 120,
-    left: 10,
+    left: 5,
     transform: [{ rotate: "60deg" }],
   },
 
   plague2: {
-    top: 180,
-    right: 5,
+    top: 185,
+    right: 0,
     transform: [{ rotate: "-60deg" }],
   },
 
   plague3: {
-    bottom: 80,
-    left: 15,
-    transform: [{ rotate: "40deg" }],
+    bottom: 170,
+    left: 5,
+    transform: [{ rotate: "45deg" }],
   },
 
   plague4: {
-    bottom: 70,
-    right: 10,
-    transform: [{ rotate: "-40deg" }],
+    bottom: 90,
+    right: 5,
+    transform: [{ rotate: "-45deg" }],
+  },
+
+  plague5: {
+    bottom: 25,
+    left: 110,
+    transform: [{ rotate: "15deg" }],
   },
 });

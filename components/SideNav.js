@@ -35,13 +35,17 @@ export default function SideNav({
         style={styles.menuButton}
         onPress={() => setOpen(!open)}
       >
-        <Text style={styles.menuIcon}>☰</Text>
+        <Text style={styles.menuIcon}>
+          ☰
+        </Text>
       </Pressable>
 
       {/* SIDE MENU */}
       {open && (
         <View style={styles.nav}>
-          <Text style={styles.navTitle}>Hokie Plague</Text>
+          <Text style={styles.navTitle}>
+            Hokie Plague
+          </Text>
 
           {/* JOIN GAME */}
           <Pressable
@@ -63,7 +67,7 @@ export default function SideNav({
             </Text>
           </Pressable>
 
-          {/* PLAYERS / QUEUE */}
+          {/* PLAYERS */}
           <Pressable
             style={styles.navItem}
             onPress={() => goTo("queue")}
@@ -101,7 +105,6 @@ export default function SideNav({
 const styles = StyleSheet.create({
   menuButton: {
     position: "absolute",
-
     top: 105,
     left: 18,
 
@@ -162,14 +165,12 @@ const styles = StyleSheet.create({
 
   navText: {
     color: "#FFFFFF",
-
     fontSize: 18,
     fontWeight: "700",
   },
 
   leaveText: {
     color: "#FF5252",
-
     fontSize: 18,
     fontWeight: "800",
   },
