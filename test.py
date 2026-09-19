@@ -1,1 +1,1 @@
-print("hello world")
+print("Oof you caught the plague :(")
