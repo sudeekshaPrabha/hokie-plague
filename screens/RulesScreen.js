@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 import {
   Pressable,
@@ -7,19 +7,18 @@ import {
   StyleSheet,
   Text,
   View,
-} from 'react-native';
+} from "react-native";
 
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from "expo-status-bar";
 
 
-export default function RulesScreen({ onBack, onContinue }) {
+export default function RulesScreen({
+  onBack,
+  onContinue,
+}) {
 
   const [openRole, setOpenRole] = useState(null);
 
-
-  // =====================================================
-  // OPEN / CLOSE ROLE CARD
-  // =====================================================
 
   const toggleRole = (role) => {
 
@@ -67,9 +66,8 @@ export default function RulesScreen({ onBack, onContinue }) {
         </View>
 
 
-
         {/* =================================================
-            BASIC GAME FLOW
+            GAME FLOW
         ================================================= */}
 
         <View style={styles.section}>
@@ -148,8 +146,8 @@ export default function RulesScreen({ onBack, onContinue }) {
               </Text>
 
               <Text style={styles.stepDescription}>
-                Plaguers hunt. Survivors run. Safe zones may
-                be the only thing keeping you alive.
+                Plaguers hunt while Survivors avoid infection
+                and use safe zones to stay alive.
               </Text>
 
             </View>
@@ -159,9 +157,8 @@ export default function RulesScreen({ onBack, onContinue }) {
         </View>
 
 
-
         {/* =================================================
-            ROLE SECTION
+            ROLES
         ================================================= */}
 
         <View style={styles.rolesSection}>
@@ -175,18 +172,17 @@ export default function RulesScreen({ onBack, onContinue }) {
           </Text>
 
 
-
           {/* =================================================
-              PLAGUER CARD
+              PLAGUER
           ================================================= */}
 
           <Pressable
             style={[
               styles.roleCard,
-              openRole === 'plaguer' &&
+              openRole === "plaguer" &&
                 styles.roleCardActive,
             ]}
-            onPress={() => toggleRole('plaguer')}
+            onPress={() => toggleRole("plaguer")}
           >
 
             <View style={styles.roleHeader}>
@@ -209,9 +205,9 @@ export default function RulesScreen({ onBack, onContinue }) {
                 <View style={styles.plaguerDot} />
 
                 <Text style={styles.arrow}>
-                  {openRole === 'plaguer'
-                    ? '−'
-                    : '+'}
+                  {openRole === "plaguer"
+                    ? "−"
+                    : "+"}
                 </Text>
 
               </View>
@@ -220,12 +216,11 @@ export default function RulesScreen({ onBack, onContinue }) {
 
 
             <Text style={styles.rolePreview}>
-              Hunt down Survivors and spread the
-              HokiePlague.
+              Hunt Survivors and spread the HokiePlague.
             </Text>
 
 
-            {openRole === 'plaguer' && (
+            {openRole === "plaguer" && (
 
               <View style={styles.roleDetails}>
 
@@ -240,7 +235,7 @@ export default function RulesScreen({ onBack, onContinue }) {
 
                 <RuleItem
                   title="HUNT"
-                  text="Move around the game area and use the information provided on your screen to locate nearby Survivors."
+                  text="Move throughout the game area and use the information on your screen to track down Survivors."
                 />
 
 
@@ -251,8 +246,20 @@ export default function RulesScreen({ onBack, onContinue }) {
 
 
                 <RuleItem
+                  title="SURVIVOR SCAN"
+                  text="Plaguers have a special tracking tool that reveals the locations of all active Survivors for 10 seconds."
+                />
+
+
+                <RuleItem
+                  title="5 SCAN ATTEMPTS"
+                  text="You can use the Survivor Scan up to 5 times during the game, so choose carefully when to activate it."
+                />
+
+
+                <RuleItem
                   title="WATCH THE SAFE ZONES"
-                  text="Survivors inside an active safe zone cannot be infected. You may have to wait for them to leave."
+                  text="Survivors inside an active green safe zone cannot be infected. You may have to wait for them to leave."
                 />
 
 
@@ -263,8 +270,8 @@ export default function RulesScreen({ onBack, onContinue }) {
                   </Text>
 
                   <Text style={styles.roleTipText}>
-                    Don't chase one Survivor for too long.
-                    Keep moving and look for easier targets.
+                    Use your scans strategically. Don't waste
+                    all 5 early in the game.
                   </Text>
 
                 </View>
@@ -276,18 +283,17 @@ export default function RulesScreen({ onBack, onContinue }) {
           </Pressable>
 
 
-
           {/* =================================================
-              SURVIVOR CARD
+              SURVIVOR
           ================================================= */}
 
           <Pressable
             style={[
               styles.roleCard,
-              openRole === 'survivor' &&
+              openRole === "survivor" &&
                 styles.roleCardActive,
             ]}
-            onPress={() => toggleRole('survivor')}
+            onPress={() => toggleRole("survivor")}
           >
 
             <View style={styles.roleHeader}>
@@ -310,9 +316,9 @@ export default function RulesScreen({ onBack, onContinue }) {
                 <View style={styles.survivorDot} />
 
                 <Text style={styles.arrow}>
-                  {openRole === 'survivor'
-                    ? '−'
-                    : '+'}
+                  {openRole === "survivor"
+                    ? "−"
+                    : "+"}
                 </Text>
 
               </View>
@@ -326,7 +332,7 @@ export default function RulesScreen({ onBack, onContinue }) {
             </Text>
 
 
-            {openRole === 'survivor' && (
+            {openRole === "survivor" && (
 
               <View style={styles.roleDetails}>
 
@@ -341,19 +347,25 @@ export default function RulesScreen({ onBack, onContinue }) {
 
                 <RuleItem
                   title="KEEP MOVING"
-                  text="Use the play area to create distance between yourself and anyone you think may be a Plaguer."
+                  text="Create distance between yourself and anyone you think may be a Plaguer."
                 />
 
 
                 <RuleItem
-                  title="USE SAFE ZONES"
-                  text="Active safe zones temporarily protect you from being infected."
+                  title="USE GREEN SAFE ZONES"
+                  text="Green zones temporarily protect Survivors from being infected."
+                />
+
+
+                <RuleItem
+                  title="WATCH FOR FLASHING"
+                  text="When a green safe zone starts flashing, it is about to disappear. Be ready to move."
                 />
 
 
                 <RuleItem
                   title="IF YOU'RE CAUGHT"
-                  text="Once infected, you're out of active play for that round and become a spectator."
+                  text="Once infected, you are removed from active play for that round and become a spectator."
                 />
 
 
@@ -364,8 +376,8 @@ export default function RulesScreen({ onBack, onContinue }) {
                   </Text>
 
                   <Text style={styles.roleTipText}>
-                    Don't stay in one place. Plan where
-                    you'll run before a safe zone expires.
+                    Don't wait until a safe zone disappears
+                    before deciding where to run next.
                   </Text>
 
                 </View>
@@ -378,6 +390,145 @@ export default function RulesScreen({ onBack, onContinue }) {
 
         </View>
 
+
+        {/* =================================================
+            SAFE ZONES
+        ================================================= */}
+
+        <View style={styles.safeZoneSection}>
+
+          <Text style={styles.sectionTitle}>
+            MAP ZONES
+          </Text>
+
+          <Text style={styles.safeZoneIntro}>
+            Colored zones on the map give important
+            information during the round.
+          </Text>
+
+
+          {/* GREEN ZONE */}
+
+          <View style={styles.greenZoneCard}>
+
+            <View style={styles.zoneHeader}>
+
+              <View style={styles.greenZoneCircle} />
+
+              <View style={styles.zoneTitleContainer}>
+
+                <Text style={styles.greenZoneTitle}>
+                  GREEN ZONE
+                </Text>
+
+                <Text style={styles.zoneSubtitle}>
+                  Survivor Safe Zone
+                </Text>
+
+              </View>
+
+            </View>
+
+
+            <Text style={styles.zoneDescription}>
+              Green zones are temporary safe areas where
+              Survivors cannot be caught or infected by a
+              Plaguer.
+            </Text>
+
+
+            <View style={styles.zoneRule}>
+
+              <Text style={styles.zoneRuleTitle}>
+                TEMPORARY PROTECTION
+              </Text>
+
+              <Text style={styles.zoneRuleText}>
+                Survivors inside the green area are protected
+                for a short period of time.
+              </Text>
+
+            </View>
+
+
+            <View style={styles.zoneRule}>
+
+              <Text style={styles.zoneRuleTitle}>
+                FLASHING = LEAVE SOON
+              </Text>
+
+              <Text style={styles.zoneRuleText}>
+                When the green zone starts flashing, its
+                protection is almost over and the zone will
+                disappear shortly afterward.
+              </Text>
+
+            </View>
+
+          </View>
+
+
+          {/* RED ZONE */}
+
+          <View style={styles.redZoneCard}>
+
+            <View style={styles.zoneHeader}>
+
+              <View style={styles.redZoneCircle} />
+
+              <View style={styles.zoneTitleContainer}>
+
+                <Text style={styles.redZoneTitle}>
+                  RED ZONE
+                </Text>
+
+                <Text style={styles.zoneSubtitle}>
+                  Infection Alert
+                </Text>
+
+              </View>
+
+            </View>
+
+
+            <Text style={styles.zoneDescription}>
+              A red zone appears after a Plaguer successfully
+              infects a Survivor.
+            </Text>
+
+
+            <View style={styles.zoneRule}>
+
+              <Text style={styles.redRuleTitle}>
+                INFECTION DETECTED
+              </Text>
+
+              <Text style={styles.zoneRuleText}>
+                The red zone tells players that a Plaguer
+                infected a Survivor somewhere inside that
+                highlighted area.
+              </Text>
+
+            </View>
+
+
+            <View style={styles.zoneRule}>
+
+              <Text style={styles.redRuleTitle}>
+                GENERAL LOCATION ONLY
+              </Text>
+
+              <Text style={styles.zoneRuleText}>
+                The exact location of the Plaguer is not
+                revealed. The red area only shows the general
+                area where the infection happened.
+              </Text>
+
+            </View>
+
+          </View>
+
+        </View>
 
 
         {/* =================================================
@@ -398,7 +549,8 @@ export default function RulesScreen({ onBack, onContinue }) {
             </Text>
 
             <Text style={styles.roundText}>
-              The game is played across multiple rounds.
+              Players receive a secret role before gameplay
+              begins.
             </Text>
 
           </View>
@@ -411,8 +563,8 @@ export default function RulesScreen({ onBack, onContinue }) {
             </Text>
 
             <Text style={styles.roundText}>
-              Safe zones appear during gameplay and only
-              stay active temporarily.
+              Survivors spread out before the hunting phase
+              starts.
             </Text>
 
           </View>
@@ -425,8 +577,9 @@ export default function RulesScreen({ onBack, onContinue }) {
             </Text>
 
             <Text style={styles.roundText}>
-              Surviving players and successful Plaguers
-              contribute toward their team's score.
+              Green zones provide temporary protection while
+              red zones indicate where an infection recently
+              occurred.
             </Text>
 
           </View>
@@ -439,8 +592,23 @@ export default function RulesScreen({ onBack, onContinue }) {
             </Text>
 
             <Text style={styles.roundText}>
-              Follow the map boundaries and stay aware of
-              your surroundings while playing.
+              Plaguers can use their Survivor Scan up to
+              5 times to reveal active Survivors for
+              10 seconds.
+            </Text>
+
+          </View>
+
+
+          <View style={styles.roundRow}>
+
+            <Text style={styles.roundIcon}>
+              05
+            </Text>
+
+            <Text style={styles.roundText}>
+              Stay inside the game boundaries and always be
+              aware of your surroundings while moving.
             </Text>
 
           </View>
@@ -448,9 +616,8 @@ export default function RulesScreen({ onBack, onContinue }) {
         </View>
 
 
-
         {/* =================================================
-            OPTIONAL CONTINUE BUTTON
+            BUTTONS
         ================================================= */}
 
         {onContinue && (
@@ -498,10 +665,13 @@ export default function RulesScreen({ onBack, onContinue }) {
 
 
 // ======================================================
-// REUSABLE RULE
+// REUSABLE RULE ITEM
 // ======================================================
 
-function RuleItem({ title, text }) {
+function RuleItem({
+  title,
+  text,
+}) {
 
   return (
 
@@ -535,58 +705,78 @@ const styles = StyleSheet.create({
 
   safeArea: {
     flex: 1,
-    backgroundColor: '#111312',
+
+    backgroundColor: "#111312",
   },
 
 
   screen: {
     flex: 1,
-    backgroundColor: '#111312',
+
+    backgroundColor: "#111312",
   },
 
 
   content: {
     paddingHorizontal: 22,
+
     paddingTop: 24,
+
     paddingBottom: 60,
   },
 
 
+  // ====================================================
   // HEADER
+  // ====================================================
 
   header: {
-    alignItems: 'center',
+    alignItems: "center",
+
     marginBottom: 35,
   },
 
 
   virusText: {
     fontSize: 15,
-    fontWeight: '900',
+
+    fontWeight: "900",
+
     letterSpacing: 6,
-    color: '#65FF45',
+
+    color: "#65FF45",
   },
 
 
   title: {
     marginTop: 10,
+
     fontSize: 32,
-    fontWeight: '900',
+
+    fontWeight: "900",
+
     letterSpacing: 2,
-    color: '#FFFFFF',
-    textAlign: 'center',
+
+    color: "#FFFFFF",
+
+    textAlign: "center",
   },
 
 
   subtitle: {
     marginTop: 8,
+
     fontSize: 14,
-    color: '#999999',
-    textAlign: 'center',
+
+    color: "#999999",
+
+    textAlign: "center",
   },
 
 
-  // SECTIONS
+  // ====================================================
+  // SECTION TITLES
+  // ====================================================
 
   section: {
     marginBottom: 35,
@@ -595,39 +785,51 @@ const styles = StyleSheet.create({
 
   sectionTitle: {
     fontSize: 13,
-    fontWeight: '800',
+
+    fontWeight: "800",
+
     letterSpacing: 3,
-    color: '#65FF45',
+
+    color: "#65FF45",
   },
 
 
-  // GAME STEPS
+  // ====================================================
+  // GAME FLOW
+  // ====================================================
 
   stepRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
+
     marginTop: 20,
-    alignItems: 'flex-start',
+
+    alignItems: "flex-start",
   },
 
 
   stepNumber: {
     width: 34,
+
     height: 34,
+
     borderRadius: 17,
 
     borderWidth: 1,
-    borderColor: '#39FF14',
 
-    alignItems: 'center',
-    justifyContent: 'center',
+    borderColor: "#39FF14",
+
+    alignItems: "center",
+
+    justifyContent: "center",
 
     marginRight: 14,
   },
 
 
   stepNumberText: {
-    color: '#65FF45',
-    fontWeight: '800',
+    color: "#65FF45",
+
+    fontWeight: "800",
   },
 
 
@@ -638,28 +840,38 @@ const styles = StyleSheet.create({
 
   stepTitle: {
     fontSize: 16,
-    fontWeight: '800',
-    color: '#FFFFFF',
+
+    fontWeight: "800",
+
+    color: "#FFFFFF",
   },
 
 
   stepDescription: {
     marginTop: 4,
+
     fontSize: 14,
+
     lineHeight: 20,
-    color: '#AAAAAA',
+
+    color: "#AAAAAA",
   },
 
 
   connector: {
     marginLeft: 16,
+
     width: 1,
+
     height: 18,
-    backgroundColor: '#304030',
+
+    backgroundColor: "#304030",
   },
 
 
+  // ====================================================
   // ROLES
+  // ====================================================
 
   rolesSection: {
     marginBottom: 35,
@@ -668,17 +880,21 @@ const styles = StyleSheet.create({
 
   tapHint: {
     marginTop: 6,
+
     marginBottom: 15,
-    color: '#777777',
+
+    color: "#777777",
+
     fontSize: 13,
   },
 
 
   roleCard: {
-    backgroundColor: '#191C1A',
+    backgroundColor: "#191C1A",
 
     borderWidth: 1,
-    borderColor: '#303530',
+
+    borderColor: "#303530",
 
     borderRadius: 16,
 
@@ -689,83 +905,102 @@ const styles = StyleSheet.create({
 
 
   roleCardActive: {
-    borderColor: '#39FF14',
+    borderColor: "#39FF14",
   },
 
 
   roleHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+
+    justifyContent: "space-between",
+
+    alignItems: "center",
   },
 
 
   roleLabel: {
     fontSize: 10,
-    fontWeight: '800',
+
+    fontWeight: "800",
+
     letterSpacing: 2,
-    color: '#777777',
+
+    color: "#777777",
   },
 
 
   roleName: {
     marginTop: 3,
+
     fontSize: 23,
-    fontWeight: '900',
+
+    fontWeight: "900",
+
     letterSpacing: 2,
-    color: '#FFFFFF',
+
+    color: "#FFFFFF",
   },
 
 
   roleRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+
+    alignItems: "center",
   },
 
 
   plaguerDot: {
     width: 11,
+
     height: 11,
+
     borderRadius: 6,
 
     marginRight: 14,
 
-    backgroundColor: '#65FF45',
+    backgroundColor: "#65FF45",
 
-    shadowColor: '#39FF14',
+    shadowColor: "#39FF14",
+
     shadowOpacity: 1,
+
     shadowRadius: 8,
   },
 
 
   survivorDot: {
     width: 11,
+
     height: 11,
+
     borderRadius: 6,
 
     marginRight: 14,
 
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
   },
 
 
   arrow: {
     width: 25,
-    textAlign: 'center',
+
+    textAlign: "center",
 
     fontSize: 26,
-    fontWeight: '300',
 
-    color: '#65FF45',
+    fontWeight: "300",
+
+    color: "#65FF45",
   },
 
 
   rolePreview: {
     marginTop: 12,
 
-    color: '#A0A0A0',
+    color: "#A0A0A0",
 
     fontSize: 14,
+
     lineHeight: 20,
   },
 
@@ -778,14 +1013,14 @@ const styles = StyleSheet.create({
   divider: {
     height: 1,
 
-    backgroundColor: '#303530',
+    backgroundColor: "#303530",
 
     marginVertical: 18,
   },
 
 
   ruleItem: {
-    flexDirection: 'row',
+    flexDirection: "row",
 
     marginBottom: 18,
   },
@@ -793,14 +1028,16 @@ const styles = StyleSheet.create({
 
   ruleBullet: {
     width: 7,
+
     height: 7,
 
     borderRadius: 4,
 
     marginTop: 6,
+
     marginRight: 12,
 
-    backgroundColor: '#65FF45',
+    backgroundColor: "#65FF45",
   },
 
 
@@ -811,9 +1048,12 @@ const styles = StyleSheet.create({
 
   ruleTitle: {
     fontSize: 12,
-    fontWeight: '900',
+
+    fontWeight: "900",
+
     letterSpacing: 1.5,
-    color: '#FFFFFF',
+
+    color: "#FFFFFF",
   },
 
 
@@ -821,9 +1061,10 @@ const styles = StyleSheet.create({
     marginTop: 4,
 
     fontSize: 13,
+
     lineHeight: 19,
 
-    color: '#A0A0A0',
+    color: "#A0A0A0",
   },
 
 
@@ -834,28 +1075,29 @@ const styles = StyleSheet.create({
 
     borderRadius: 10,
 
-    backgroundColor: '#132015',
+    backgroundColor: "#132015",
 
     borderLeftWidth: 3,
-    borderLeftColor: '#39FF14',
+
+    borderLeftColor: "#39FF14",
   },
 
 
   roleTipLabel: {
     fontSize: 10,
 
-    fontWeight: '900',
+    fontWeight: "900",
 
     letterSpacing: 2,
 
-    color: '#65FF45',
+    color: "#65FF45",
   },
 
 
   roleTipText: {
     marginTop: 5,
 
-    color: '#C5C5C5',
+    color: "#C5C5C5",
 
     lineHeight: 18,
 
@@ -863,7 +1105,205 @@ const styles = StyleSheet.create({
   },
 
 
+  // ====================================================
+  // MAP ZONES
+  // ====================================================
+
+  safeZoneSection: {
+    marginBottom: 35,
+  },
+
+
+  safeZoneIntro: {
+    marginTop: 7,
+
+    marginBottom: 15,
+
+    fontSize: 13,
+
+    lineHeight: 19,
+
+    color: "#888888",
+  },
+
+
+  greenZoneCard: {
+    padding: 20,
+
+    marginBottom: 14,
+
+    borderRadius: 16,
+
+    backgroundColor: "#151F17",
+
+    borderWidth: 1,
+
+    borderColor: "#39FF14",
+  },
+
+
+  greenZoneCircle: {
+    width: 42,
+
+    height: 42,
+
+    borderRadius: 21,
+
+    marginRight: 14,
+
+    backgroundColor:
+      "rgba(57, 255, 20, 0.18)",
+
+    borderWidth: 3,
+
+    borderColor: "#39FF14",
+
+    shadowColor: "#39FF14",
+
+    shadowOpacity: 0.8,
+
+    shadowRadius: 8,
+  },
+
+
+  greenZoneTitle: {
+    fontSize: 18,
+
+    fontWeight: "900",
+
+    letterSpacing: 2,
+
+    color: "#65FF45",
+  },
+
+
+  redZoneCard: {
+    padding: 20,
+
+    borderRadius: 16,
+
+    backgroundColor: "#211515",
+
+    borderWidth: 1,
+
+    borderColor: "#FF4545",
+  },
+
+
+  redZoneCircle: {
+    width: 42,
+
+    height: 42,
+
+    borderRadius: 21,
+
+    marginRight: 14,
+
+    backgroundColor:
+      "rgba(255, 69, 69, 0.16)",
+
+    borderWidth: 3,
+
+    borderColor: "#FF4545",
+
+    shadowColor: "#FF4545",
+
+    shadowOpacity: 0.8,
+
+    shadowRadius: 8,
+  },
+
+
+  redZoneTitle: {
+    fontSize: 18,
+
+    fontWeight: "900",
+
+    letterSpacing: 2,
+
+    color: "#FF5C5C",
+  },
+
+
+  zoneHeader: {
+    flexDirection: "row",
+
+    alignItems: "center",
+  },
+
+
+  zoneTitleContainer: {
+    flex: 1,
+  },
+
+
+  zoneSubtitle: {
+    marginTop: 3,
+
+    fontSize: 12,
+
+    color: "#888888",
+  },
+
+
+  zoneDescription: {
+    marginTop: 17,
+
+    fontSize: 14,
+
+    lineHeight: 20,
+
+    color: "#C0C0C0",
+  },
+
+
+  zoneRule: {
+    marginTop: 17,
+
+    paddingTop: 14,
+
+    borderTopWidth: 1,
+
+    borderTopColor: "#353535",
+  },
+
+
+  zoneRuleTitle: {
+    fontSize: 11,
+
+    fontWeight: "900",
+
+    letterSpacing: 1.5,
+
+    color: "#65FF45",
+  },
+
+
+  redRuleTitle: {
+    fontSize: 11,
+
+    fontWeight: "900",
+
+    letterSpacing: 1.5,
+
+    color: "#FF5C5C",
+  },
+
+
+  zoneRuleText: {
+    marginTop: 5,
+
+    fontSize: 13,
+
+    lineHeight: 19,
+
+    color: "#A5A5A5",
+  },
+
+
+  // ====================================================
   // ROUND RULES
+  // ====================================================
 
   roundCard: {
     marginBottom: 30,
@@ -872,17 +1312,18 @@ const styles = StyleSheet.create({
 
     borderRadius: 16,
 
-    backgroundColor: '#191C1A',
+    backgroundColor: "#191C1A",
 
     borderWidth: 1,
 
-    borderColor: '#303530',
+    borderColor: "#303530",
   },
 
 
   roundRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
+    flexDirection: "row",
+
+    alignItems: "flex-start",
 
     marginTop: 18,
   },
@@ -891,9 +1332,10 @@ const styles = StyleSheet.create({
   roundIcon: {
     width: 32,
 
-    color: '#65FF45',
+    color: "#65FF45",
 
-    fontWeight: '900',
+    fontWeight: "900",
+
     fontSize: 12,
   },
 
@@ -901,25 +1343,28 @@ const styles = StyleSheet.create({
   roundText: {
     flex: 1,
 
-    color: '#B0B0B0',
+    color: "#B0B0B0",
 
     fontSize: 14,
+
     lineHeight: 20,
   },
 
 
-  // CONTINUE
+  // ====================================================
+  // BUTTONS
+  // ====================================================
 
   continueButton: {
     marginTop: 5,
 
-    backgroundColor: '#65FF45',
+    backgroundColor: "#65FF45",
 
     paddingVertical: 16,
 
     borderRadius: 12,
 
-    alignItems: 'center',
+    alignItems: "center",
   },
 
 
@@ -929,9 +1374,9 @@ const styles = StyleSheet.create({
 
 
   continueText: {
-    color: '#101210',
+    color: "#101210",
 
-    fontWeight: '900',
+    fontWeight: "900",
 
     fontSize: 15,
 
@@ -942,18 +1387,18 @@ const styles = StyleSheet.create({
   backButton: {
     marginTop: 16,
 
-    alignItems: 'center',
+    alignItems: "center",
 
     paddingVertical: 12,
   },
 
 
   backText: {
-    color: '#777777',
+    color: "#777777",
 
     fontSize: 13,
 
-    fontWeight: '700',
+    fontWeight: "700",
 
     letterSpacing: 2,
   },
