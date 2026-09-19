@@ -9,6 +9,7 @@
     "expo-location": "~57.0.19",
     "expo-status-bar": "~57.0.1",
     "firebase": "^12.19.0",
+    "lottie-react-native": "~7.3.8",
     "react": "19.2.3",
     "react-native": "0.86.3",
     "react-native-maps": "1.27.2"
@@ -19,5 +20,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web"
   },
-  "private": true
+  "private": true,
+  "allowScripts": {
+    "@firebase/util@1.15.3": true,
+    "protobufjs@7.6.6": true
+  }
 }
