@@ -3,6 +3,7 @@ import {
   View,
   Text,
   TextInput,
+  Image,
   Pressable,
   StyleSheet,
   SafeAreaView,
@@ -10,13 +11,22 @@ import {
   Platform,
 } from "react-native";
 
-export default function LoginScreen({ onContinue }) {
-  const [name, setName] = useState("");
+import SideNav from "../components/SideNav";
 
-  const handleContinue = () => {
-    if (!name.trim()) return;
+export default function JoinGameScreen({ playerName, onJoin }) {
+  const [roomCode, setRoomCode] = useState("");
 
-    onContinue(name.trim());
+  const handleJoin = () => {
+    if (!roomCode.trim()) return;
+
+    const code = roomCode.trim().toUpperCase();
+
+    console.log("Player:", playerName);
+    console.log("Room Code:", code);
+
+    if (onJoin) {
+      onJoin(code);
+    }
   };
 
   return (
@@ -25,38 +35,56 @@ export default function LoginScreen({ onContinue }) {
         style={styles.screen}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
-        {/* TOP BAR */}
+        {/* HEADER */}
         <View style={styles.header}>
           <Text style={styles.logo}>Hokie Plague</Text>
         </View>
 
-        {/* GREEN DECORATIONS */}
+        {/* SIDE NAV */}
+        <SideNav />
+
+        {/* PLAGUE DECORATIONS */}
         <Text style={[styles.plague, styles.plague1]}>〰</Text>
         <Text style={[styles.plague, styles.plague2]}>〰</Text>
         <Text style={[styles.plague, styles.plague3]}>〰</Text>
+        <Text style={[styles.plague, styles.plague4]}>〰</Text>
 
+        {/* MAIN CONTENT */}
         <View style={styles.content}>
-          <Text style={styles.title}>ENTER YOUR NAME</Text>
+          <Text style={styles.welcome}>
+            Welcome, {playerName}
+          </Text>
+
+          <Text style={styles.title}>
+            ENTER GAME CODE
+          </Text>
 
           <TextInput
             style={styles.input}
-            placeholder="Player Name"
-            placeholderTextColor="#777"
-            value={name}
-            onChangeText={setName}
-            maxLength={20}
+            placeholder="ROOM CODE"
+            placeholderTextColor="#777777"
+            value={roomCode}
+            onChangeText={setRoomCode}
+            autoCapitalize="characters"
+            autoCorrect={false}
+            maxLength={6}
           />
 
+          {/* ZOMBIE JOIN BUTTON */}
           <Pressable
-            onPress={handleContinue}
-            disabled={!name.trim()}
+            onPress={handleJoin}
+            disabled={!roomCode.trim()}
             style={({ pressed }) => [
-              styles.continueButton,
+              styles.joinButton,
               pressed && styles.pressed,
-              !name.trim() && styles.disabled,
+              !roomCode.trim() && styles.disabled,
             ]}
           >
-            <Text style={styles.continueText}>CONTINUE</Text>
+            <Image
+              source={require("../assets/join_button.png")}
+              style={styles.joinImage}
+              resizeMode="contain"
+            />
           </Pressable>
         </View>
       </KeyboardAvoidingView>
@@ -75,6 +103,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#861F41",
     justifyContent: "center",
     alignItems: "center",
+
+    borderBottomWidth: 3,
+    borderBottomColor: "#65152F",
+
+    zIndex: 10,
   },
 
   logo: {
@@ -90,42 +123,49 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
   },
 
+  welcome: {
+    color: "#FFFFFF",
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 10,
+  },
+
   title: {
     color: "#FFFFFF",
     fontSize: 20,
-    fontWeight: "800",
+    fontWeight: "900",
     letterSpacing: 2,
-    marginBottom: 25,
+    marginBottom: 20,
   },
 
   input: {
     width: "82%",
     height: 55,
+
     backgroundColor: "#202020",
-    color: "#FFFFFF",
+
     borderWidth: 2,
     borderColor: "#39FF14",
     borderRadius: 12,
-    fontSize: 18,
-    paddingHorizontal: 15,
-    marginBottom: 25,
-  },
 
-  continueButton: {
-    backgroundColor: "#861F41",
-    borderWidth: 2,
-    borderColor: "#E87722",
-    borderRadius: 12,
-    height: 55,
-    width: 180,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  continueText: {
     color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "900",
+    fontSize: 20,
+    fontWeight: "700",
+
+    textAlign: "center",
+    letterSpacing: 4,
+
+    marginBottom: 5,
+  },
+
+  joinButton: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  joinImage: {
+    width: 350,
+    height: 280,
   },
 
   pressed: {
@@ -140,10 +180,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     color: "#39FF14",
     fontSize: 90,
+    zIndex: 0,
   },
 
   plague1: {
-    top: 130,
+    top: 120,
     left: 10,
     transform: [{ rotate: "60deg" }],
   },
@@ -155,8 +196,14 @@ const styles = StyleSheet.create({
   },
 
   plague3: {
-    bottom: 60,
-    left: 110,
-    transform: [{ rotate: "20deg" }],
+    bottom: 80,
+    left: 15,
+    transform: [{ rotate: "40deg" }],
+  },
+
+  plague4: {
+    bottom: 70,
+    right: 10,
+    transform: [{ rotate: "-40deg" }],
   },
 });

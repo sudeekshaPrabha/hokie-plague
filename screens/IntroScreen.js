@@ -3,10 +3,8 @@ import React, { useEffect, useRef } from 'react';
 import {
   Animated,
   Easing,
-  Pressable,
   StyleSheet,
   Text,
-  View,
   Vibration,
   useWindowDimensions,
 } from 'react-native';
@@ -56,10 +54,14 @@ function CrackLine({
 // INTRO SCREEN
 // ======================================================
 
-export default function IntroScreen({ onEnter }) {
+export default function IntroScreen({ onFinish }) {
   const { width, height } = useWindowDimensions();
 
-  // Crack animation values
+
+  // ======================================================
+  // CRACK VALUES
+  // ======================================================
+
   const line1 = useRef(new Animated.Value(0)).current;
   const line2 = useRef(new Animated.Value(0)).current;
   const line3 = useRef(new Animated.Value(0)).current;
@@ -73,20 +75,37 @@ export default function IntroScreen({ onEnter }) {
   const line11 = useRef(new Animated.Value(0)).current;
   const line12 = useRef(new Animated.Value(0)).current;
 
-  // Only the crack layer shakes
-  const shakeX = useRef(new Animated.Value(0)).current;
+
+  // Only cracks shake
+  const shakeX = useRef(
+    new Animated.Value(0)
+  ).current;
+
+
+  // Black transition overlay
+  const blackFade = useRef(
+    new Animated.Value(0)
+  ).current;
 
 
   // ======================================================
-  // ANIMATION
+  // INTRO ANIMATION
   // ======================================================
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+
+    // --------------------------------------------------
+    // CRACKS BEGIN
+    // --------------------------------------------------
+
+    const crackTimer = setTimeout(() => {
+
       Vibration.vibrate(60);
 
-      // Crack shake
+
+      // Small crack impact shake
       Animated.sequence([
+
         Animated.timing(shakeX, {
           toValue: 7,
           duration: 35,
@@ -110,11 +129,13 @@ export default function IntroScreen({ onEnter }) {
           duration: 45,
           useNativeDriver: true,
         }),
+
       ]).start();
 
 
-      // Cracks appear one after another
+      // Lines appear one after another
       Animated.stagger(70, [
+
         Animated.timing(line1, {
           toValue: 1,
           duration: 180,
@@ -187,12 +208,43 @@ export default function IntroScreen({ onEnter }) {
           duration: 130,
           useNativeDriver: true,
         }),
+
       ]).start();
 
     }, 1000);
 
 
-    return () => clearTimeout(timer);
+    // --------------------------------------------------
+    // FADE TO BLACK
+    // --------------------------------------------------
+
+    const finishTimer = setTimeout(() => {
+
+      Animated.timing(blackFade, {
+
+        toValue: 1,
+
+        duration: 600,
+
+        easing: Easing.inOut(Easing.ease),
+
+        useNativeDriver: true,
+
+      }).start(() => {
+
+        if (onFinish) {
+          onFinish();
+        }
+
+      });
+
+    }, 3400);
+
+
+    return () => {
+      clearTimeout(crackTimer);
+      clearTimeout(finishTimer);
+    };
 
   }, []);
 
@@ -202,176 +254,184 @@ export default function IntroScreen({ onEnter }) {
   // ======================================================
 
   return (
-    <View style={styles.background}>
+    <Animated.View style={styles.screen}>
+
       <StatusBar style="light" />
 
-      <View style={styles.screen}>
 
-        {/* ==============================================
-            CRACKS
-            Only this layer moves
-        ============================================== */}
+      {/* =================================================
+          CRACKS
+      ================================================= */}
 
-        <Animated.View
-          pointerEvents="none"
-          style={[
-            styles.crackLayer,
-            {
-              transform: [
-                {
-                  translateX: shakeX,
-                },
-              ],
-            },
-          ]}
-        >
+      <Animated.View
+        pointerEvents="none"
+        style={[
+          styles.crackLayer,
 
-          <CrackLine
-            x={width * 0.12}
-            y={height * 0.27}
-            length={width * 0.48}
-            angle={55}
-            thickness={4}
-            progress={line1}
-          />
+          {
+            transform: [
+              {
+                translateX: shakeX,
+              },
+            ],
+          },
 
-          <CrackLine
-            x={width * 0.03}
-            y={height * 0.12}
-            length={width * 0.42}
-            angle={62}
-            thickness={3}
-            progress={line2}
-          />
+        ]}
+      >
 
-          <CrackLine
-            x={width * 0.48}
-            y={height * 0.31}
-            length={width * 0.53}
-            angle={-48}
-            thickness={4}
-            progress={line3}
-          />
+        <CrackLine
+          x={width * 0.12}
+          y={height * 0.27}
+          length={width * 0.48}
+          angle={55}
+          thickness={4}
+          progress={line1}
+        />
 
-          <CrackLine
-            x={width * 0.69}
-            y={height * 0.15}
-            length={width * 0.39}
-            angle={-58}
-            thickness={3}
-            progress={line4}
-          />
+        <CrackLine
+          x={width * 0.03}
+          y={height * 0.12}
+          length={width * 0.42}
+          angle={62}
+          thickness={3}
+          progress={line2}
+        />
 
-          <CrackLine
-            x={width * 0.06}
-            y={height * 0.66}
-            length={width * 0.52}
-            angle={-52}
-            thickness={4}
-            progress={line5}
-          />
+        <CrackLine
+          x={width * 0.48}
+          y={height * 0.31}
+          length={width * 0.53}
+          angle={-48}
+          thickness={4}
+          progress={line3}
+        />
 
-          <CrackLine
-            x={width * 0.48}
-            y={height * 0.61}
-            length={width * 0.54}
-            angle={48}
-            thickness={4}
-            progress={line6}
-          />
+        <CrackLine
+          x={width * 0.69}
+          y={height * 0.15}
+          length={width * 0.39}
+          angle={-58}
+          thickness={3}
+          progress={line4}
+        />
 
-          <CrackLine
-            x={0}
-            y={height * 0.38}
-            length={width * 0.35}
-            angle={12}
-            thickness={2}
-            progress={line7}
-          />
+        <CrackLine
+          x={width * 0.06}
+          y={height * 0.66}
+          length={width * 0.52}
+          angle={-52}
+          thickness={4}
+          progress={line5}
+        />
 
-          <CrackLine
-            x={width * 0.70}
-            y={height * 0.39}
-            length={width * 0.34}
-            angle={-10}
-            thickness={2}
-            progress={line8}
-          />
+        <CrackLine
+          x={width * 0.48}
+          y={height * 0.61}
+          length={width * 0.54}
+          angle={48}
+          thickness={4}
+          progress={line6}
+        />
 
-          <CrackLine
-            x={width * 0.20}
-            y={height * 0.20}
-            length={width * 0.25}
-            angle={-18}
-            thickness={2}
-            progress={line9}
-          />
+        <CrackLine
+          x={0}
+          y={height * 0.38}
+          length={width * 0.35}
+          angle={12}
+          thickness={2}
+          progress={line7}
+        />
 
-          <CrackLine
-            x={width * 0.63}
-            y={height * 0.22}
-            length={width * 0.28}
-            angle={20}
-            thickness={2}
-            progress={line10}
-          />
+        <CrackLine
+          x={width * 0.70}
+          y={height * 0.39}
+          length={width * 0.34}
+          angle={-10}
+          thickness={2}
+          progress={line8}
+        />
 
-          <CrackLine
-            x={width * 0.13}
-            y={height * 0.72}
-            length={width * 0.30}
-            angle={20}
-            thickness={2}
-            progress={line11}
-          />
+        <CrackLine
+          x={width * 0.20}
+          y={height * 0.20}
+          length={width * 0.25}
+          angle={-18}
+          thickness={2}
+          progress={line9}
+        />
 
-          <CrackLine
-            x={width * 0.67}
-            y={height * 0.70}
-            length={width * 0.30}
-            angle={-20}
-            thickness={2}
-            progress={line12}
-          />
+        <CrackLine
+          x={width * 0.63}
+          y={height * 0.22}
+          length={width * 0.28}
+          angle={20}
+          thickness={2}
+          progress={line10}
+        />
 
-        </Animated.View>
+        <CrackLine
+          x={width * 0.13}
+          y={height * 0.72}
+          length={width * 0.30}
+          angle={20}
+          thickness={2}
+          progress={line11}
+        />
+
+        <CrackLine
+          x={width * 0.67}
+          y={height * 0.70}
+          length={width * 0.30}
+          angle={-20}
+          thickness={2}
+          progress={line12}
+        />
+
+      </Animated.View>
 
 
-        {/* ==============================================
-            TEXT
-            Completely separate from crack animation
-        ============================================== */}
+      {/* =================================================
+          TEXT
 
-        <View style={styles.content}>
+          Locked directly to the middle of the screen.
+      ================================================= */}
 
-          <Text style={styles.developerText}>
-            VIRUS
-          </Text>
+      <Animated.View style={styles.centerArea}>
 
-          <Text style={styles.gameName}>
-            HokiePlague
-          </Text>
+        <Text style={styles.developerText}>
+          VIRUS
+        </Text>
 
-          <Text style={styles.tagline}>
-            The plague is spreading...
-          </Text>
+        <Text style={styles.gameName}>
+          HokiePlague
+        </Text>
 
-          <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              pressed && styles.buttonPressed,
-            ]}
-            onPress={onEnter}
-          >
-            <Text style={styles.buttonText}>
-              ENTER
-            </Text>
-          </Pressable>
+        <Text style={styles.tagline}>
+          The plague is spreading...
+        </Text>
 
-        </View>
+      </Animated.View>
 
-      </View>
-    </View>
+
+      {/* =================================================
+          BLACK FADE
+
+          Covers EVERYTHING at the end.
+      ================================================= */}
+
+      <Animated.View
+        pointerEvents="none"
+        style={[
+          styles.blackOverlay,
+
+          {
+            opacity: blackFade,
+          },
+
+        ]}
+      />
+
+    </Animated.View>
   );
 }
 
@@ -382,15 +442,11 @@ export default function IntroScreen({ onEnter }) {
 
 const styles = StyleSheet.create({
 
-  background: {
-    flex: 1,
-    backgroundColor: '#090A09',
-  },
-
-
   screen: {
     flex: 1,
+
     backgroundColor: '#151617',
+
     overflow: 'hidden',
   },
 
@@ -427,19 +483,29 @@ const styles = StyleSheet.create({
 
 
   // ====================================================
-  // CENTERED CONTENT
+  // CENTER TEXT
+  //
+  // This is manually anchored around 50% of the screen.
   // ====================================================
 
-  content: {
-    ...StyleSheet.absoluteFillObject,
+  centerArea: {
+    position: 'absolute',
+
+    left: 0,
+    right: 0,
+
+    top: '50%',
+
+    height: 150,
+
+    marginTop: -75,
 
     justifyContent: 'center',
     alignItems: 'center',
 
-    paddingHorizontal: 30,
+    paddingHorizontal: 24,
 
     zIndex: 20,
-    elevation: 20,
   },
 
 
@@ -470,7 +536,7 @@ const styles = StyleSheet.create({
   gameName: {
     width: '100%',
 
-    marginTop: 14,
+    marginTop: 12,
 
     textAlign: 'center',
 
@@ -487,7 +553,7 @@ const styles = StyleSheet.create({
   tagline: {
     width: '100%',
 
-    marginTop: 10,
+    marginTop: 8,
 
     textAlign: 'center',
 
@@ -499,43 +565,16 @@ const styles = StyleSheet.create({
   },
 
 
-  button: {
-    marginTop: 38,
+  // ====================================================
+  // BLACK TRANSITION
+  // ====================================================
 
-    paddingVertical: 14,
-    paddingHorizontal: 42,
+  blackOverlay: {
+    ...StyleSheet.absoluteFillObject,
 
-    borderWidth: 2,
+    backgroundColor: '#000000',
 
-    borderColor: '#39FF14',
-
-    borderRadius: 10,
-
-    backgroundColor: '#172219',
-  },
-
-
-  buttonPressed: {
-    transform: [
-      {
-        scale: 0.95,
-      },
-    ],
-
-    backgroundColor: '#213A24',
-  },
-
-
-  buttonText: {
-    color: '#65FF45',
-
-    fontSize: 17,
-
-    fontWeight: '800',
-
-    letterSpacing: 3,
-
-    textAlign: 'center',
+    zIndex: 999,
   },
 
 });
