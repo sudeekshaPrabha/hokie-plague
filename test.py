@@ -1,1 +1,0 @@
-print("Oof you caught the plague :(")
