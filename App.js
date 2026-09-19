@@ -8,7 +8,7 @@ import JoinGameScreen from "./screens/JoinGameScreen";
 import QueueScreen from "./screens/QueueScreen";
 import MapScreen from "./screens/MapScreen";
 
-import HokieAssistant from "./components/HokieBird";
+import HokieBird from "./components/HokieBird";
 
 
 export default function App() {
@@ -43,7 +43,10 @@ export default function App() {
   const renderCurrentScreen = () => {
 
 
+    // ===================================================
     // INTRO
+    // ===================================================
+
     if (currentScreen === "intro") {
 
       return (
@@ -55,7 +58,10 @@ export default function App() {
     }
 
 
+    // ===================================================
     // LOGIN
+    // ===================================================
+
     if (currentScreen === "login") {
 
       return (
@@ -75,7 +81,10 @@ export default function App() {
     }
 
 
+    // ===================================================
     // RULES
+    // ===================================================
+
     if (currentScreen === "rules") {
 
       return (
@@ -95,7 +104,10 @@ export default function App() {
     }
 
 
+    // ===================================================
     // JOIN GAME
+    // ===================================================
+
     if (currentScreen === "join") {
 
       return (
@@ -123,7 +135,10 @@ export default function App() {
     }
 
 
+    // ===================================================
     // QUEUE / PLAYERS
+    // ===================================================
+
     if (currentScreen === "queue") {
 
       return (
@@ -147,7 +162,10 @@ export default function App() {
     }
 
 
+    // ===================================================
     // MAP
+    // ===================================================
+
     if (currentScreen === "map") {
 
       return (
@@ -184,14 +202,21 @@ export default function App() {
 
     <View style={styles.app}>
 
-      {/* Current page */}
+      {/* CURRENT SCREEN */}
       {renderCurrentScreen()}
 
 
-      {/* Hokie AI Assistant
-          Shows everywhere except intro */}
+      {/* =================================================
+          HOKIE BIRD AI
+
+          Stays mounted throughout the app so chat history
+          is preserved when switching between pages.
+
+          Hidden during the cinematic intro.
+      ================================================= */}
+
       {currentScreen !== "intro" && (
-        <HokieAssistant />
+        <HokieBird />
       )}
 
     </View>

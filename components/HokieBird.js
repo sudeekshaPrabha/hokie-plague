@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import {
+  Image,
   Modal,
   Pressable,
   ScrollView,
@@ -10,11 +11,8 @@ import {
   View,
 } from "react-native";
 
-
-export default function HokieAssistant() {
-
+export default function HokieBird() {
   const [open, setOpen] = useState(false);
-
   const [question, setQuestion] = useState("");
 
   const [messages, setMessages] = useState([
@@ -24,255 +22,167 @@ export default function HokieAssistant() {
     },
   ]);
 
-
-  // =====================================================
-  // TEMPORARY LOCAL GAME-RULE ASSISTANT
-  // =====================================================
-
   const getAnswer = (input) => {
-
     const q = input.toLowerCase();
 
-
-    if (
-      q.includes("green") ||
-      q.includes("safe zone")
-    ) {
+    if (q.includes("green") || q.includes("safe zone")) {
       return (
-        "Green zones are temporary safe areas for Survivors. " +
-        "While inside, Survivors cannot be infected. " +
-        "If the zone starts flashing, it is about to disappear!"
+        "Green zones are temporary safe areas for Survivors. While inside, Survivors cannot be infected. If the zone starts flashing, it is about to disappear."
       );
     }
 
-
-    if (
-      q.includes("red") ||
-      q.includes("red zone")
-    ) {
+    if (q.includes("red") || q.includes("red zone")) {
       return (
-        "A red zone appears after a Plaguer infects a Survivor. " +
-        "It shows the general area where the infection happened, " +
-        "but not the exact location."
+        "A red zone appears after a Plaguer infects a Survivor. It shows the general area where the infection happened, but not the exact location."
       );
     }
-
 
     if (
       q.includes("scan") ||
-      q.includes("reveal")
+      q.includes("reveal") ||
+      q.includes("location")
     ) {
       return (
-        "Plaguers have 5 Survivor Scans. Each scan reveals the " +
-        "locations of all active Survivors for 10 seconds."
+        "Plaguers have 5 Survivor Scans. Each scan reveals the locations of all active Survivors for 10 seconds."
       );
     }
 
-
-    if (
-      q.includes("plaguer") ||
-      q.includes("infect")
-    ) {
+    if (q.includes("plaguer")) {
       return (
-        "Plaguers hunt Survivors and try to infect them before " +
-        "the round ends. They also have 5 Survivor Scans to help " +
-        "locate players."
+        "Plaguers hunt Survivors and try to infect them before the round ends. They also have 5 Survivor Scans to help locate players."
       );
     }
 
-
-    if (
-      q.includes("survivor") ||
-      q.includes("student")
-    ) {
+    if (q.includes("survivor") || q.includes("student")) {
       return (
-        "Survivors need to avoid Plaguers and stay uninfected. " +
-        "Use green safe zones for temporary protection and keep moving!"
+        "Survivors need to avoid Plaguers and stay uninfected. Use green safe zones for temporary protection and keep moving."
       );
     }
 
-
-    if (
-      q.includes("caught") ||
-      q.includes("infected")
-    ) {
+    if (q.includes("infected") || q.includes("caught")) {
       return (
-        "If a Survivor is infected, they are removed from active play " +
-        "for that round and become a spectator."
+        "If a Survivor is infected, they are removed from active play for that round and become a spectator."
       );
     }
 
+    if (q.includes("rules")) {
+      return (
+        "You can check the Rules screen for full gameplay instructions, role details, safe zones, red zones, and Plaguer scan information."
+      );
+    }
 
     return (
-      "I’m not sure about that one yet! Try asking me about Plaguers, " +
-      "Survivors, scans, green zones, red zones, or infections."
+      "I’m still learning! Try asking me about Survivors, Plaguers, green zones, red zones, infections, or Survivor Scans."
     );
-
   };
 
-
-  // =====================================================
-  // SEND QUESTION
-  // =====================================================
-
   const sendMessage = () => {
-
     const trimmedQuestion = question.trim();
 
     if (!trimmedQuestion) {
       return;
     }
 
-
     const userMessage = {
       sender: "user",
       text: trimmedQuestion,
     };
-
 
     const botMessage = {
       sender: "bot",
       text: getAnswer(trimmedQuestion),
     };
 
-
-    setMessages((previousMessages) => [
-      ...previousMessages,
+    setMessages((oldMessages) => [
+      ...oldMessages,
       userMessage,
       botMessage,
     ]);
 
-
     setQuestion("");
-
   };
 
-
   return (
-
     <>
-
-      {/* =================================================
-          FLOATING HOKIE BUTTON
-      ================================================= */}
-
+      {/* FLOATING BUTTON */}
       <Pressable
         style={styles.assistantButton}
         onPress={() => setOpen(true)}
       >
-
-        {/* Temporary mascot */}
-        <Text style={styles.birdEmoji}>
-          🦃
-        </Text>
+        <Image
+          source={require("../assets/hokie-bird-ai.png")}
+          style={styles.birdImage}
+          resizeMode="contain"
+        />
 
         <View style={styles.onlineDot} />
-
       </Pressable>
 
-
-      {/* =================================================
-          CHAT WINDOW
-      ================================================= */}
-
+      {/* CHAT MODAL */}
       <Modal
         visible={open}
         transparent
         animationType="slide"
         onRequestClose={() => setOpen(false)}
       >
-
-        <View style={styles.modalBackground}>
-
+        <View style={styles.overlay}>
           <View style={styles.chatBox}>
-
-
             {/* HEADER */}
-
             <View style={styles.header}>
-
               <View style={styles.headerLeft}>
-
-                <View style={styles.smallMascot}>
-                  <Text style={styles.smallBird}>
-                    🦃
-                  </Text>
+                <View style={styles.headerImageWrap}>
+                  <Image
+                    source={require("../assets/hokie-bird-ai.png")}
+                    style={styles.headerBirdImage}
+                    resizeMode="contain"
+                  />
                 </View>
-
 
                 <View>
-
-                  <Text style={styles.assistantName}>
-                    Hokie Helper
-                  </Text>
-
-                  <Text style={styles.status}>
-                    ● Online
-                  </Text>
-
+                  <Text style={styles.name}>Hokie Helper</Text>
+                  <Text style={styles.status}>● Online</Text>
                 </View>
-
               </View>
 
-
-              <Pressable
-                onPress={() => setOpen(false)}
-              >
-
-                <Text style={styles.closeButton}>
-                  ×
-                </Text>
-
+              <Pressable onPress={() => setOpen(false)}>
+                <Text style={styles.close}>×</Text>
               </Pressable>
-
             </View>
 
+            {/* OPTIONAL INTRO PANEL */}
+            <View style={styles.heroPanel}>
+              <Image
+                source={require("../assets/hokie-bird-ai.png")}
+                style={styles.heroImage}
+                resizeMode="contain"
+              />
+              <Text style={styles.heroText}>
+                Ask me about zones, roles, scans, or how to survive the plague.
+              </Text>
+            </View>
 
-            {/* CHAT */}
-
+            {/* MESSAGES */}
             <ScrollView
               style={styles.messages}
-              contentContainerStyle={styles.messagesContent}
+              contentContainerStyle={styles.messageContent}
             >
-
               {messages.map((message, index) => (
-
                 <View
                   key={index}
                   style={[
                     styles.messageBubble,
-
                     message.sender === "user"
                       ? styles.userBubble
                       : styles.botBubble,
                   ]}
                 >
-
-                  <Text
-                    style={[
-                      styles.messageText,
-
-                      message.sender === "user"
-                        ? styles.userText
-                        : styles.botText,
-                    ]}
-                  >
-
-                    {message.text}
-
-                  </Text>
-
+                  <Text style={styles.messageText}>{message.text}</Text>
                 </View>
-
               ))}
-
             </ScrollView>
 
-
             {/* INPUT */}
-
             <View style={styles.inputArea}>
-
               <TextInput
                 style={styles.input}
                 value={question}
@@ -283,326 +193,209 @@ export default function HokieAssistant() {
                 onSubmitEditing={sendMessage}
               />
 
-
               <Pressable
                 style={styles.sendButton}
                 onPress={sendMessage}
               >
-
-                <Text style={styles.sendText}>
-                  ↑
-                </Text>
-
+                <Text style={styles.sendText}>↑</Text>
               </Pressable>
-
             </View>
-
-
           </View>
-
         </View>
-
       </Modal>
-
     </>
-
   );
 }
 
-
-// =====================================================
-// STYLES
-// =====================================================
-
 const styles = StyleSheet.create({
-
   assistantButton: {
-
     position: "absolute",
-
     right: 20,
     bottom: 30,
-
-    width: 64,
-    height: 64,
-
-    borderRadius: 32,
-
+    width: 74,
+    height: 74,
+    borderRadius: 37,
     backgroundColor: "#861F41",
-
     borderWidth: 2,
     borderColor: "#39FF14",
-
     justifyContent: "center",
     alignItems: "center",
-
-    zIndex: 100,
-
+    zIndex: 999,
+    elevation: 20,
     shadowColor: "#39FF14",
-    shadowOpacity: 0.7,
+    shadowOpacity: 0.5,
     shadowRadius: 10,
-
   },
 
-
-  birdEmoji: {
-    fontSize: 34,
+  birdImage: {
+    width: 58,
+    height: 58,
+    borderRadius: 29,
   },
-
 
   onlineDot: {
-
     position: "absolute",
-
     right: 2,
     bottom: 3,
-
-    width: 13,
-    height: 13,
-
+    width: 14,
+    height: 14,
     borderRadius: 7,
-
     backgroundColor: "#39FF14",
-
     borderWidth: 2,
     borderColor: "#111111",
-
   },
 
-
-  modalBackground: {
-
+  overlay: {
     flex: 1,
-
     justifyContent: "flex-end",
-
-    backgroundColor: "rgba(0,0,0,0.55)",
-
+    backgroundColor: "rgba(0,0,0,0.6)",
   },
-
 
   chatBox: {
-
-    height: "70%",
-
+    height: "78%",
     backgroundColor: "#151716",
-
-    borderTopLeftRadius: 22,
-    borderTopRightRadius: 22,
-
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     overflow: "hidden",
-
-    borderTopWidth: 1,
+    borderTopWidth: 2,
     borderColor: "#39FF14",
-
   },
-
 
   header: {
-
     flexDirection: "row",
-
     justifyContent: "space-between",
     alignItems: "center",
-
     paddingHorizontal: 20,
     paddingVertical: 16,
-
-    backgroundColor: "#1D201E",
-
+    backgroundColor: "#202220",
     borderBottomWidth: 1,
-    borderBottomColor: "#303530",
-
+    borderBottomColor: "#333333",
   },
-
 
   headerLeft: {
-
     flexDirection: "row",
     alignItems: "center",
-
   },
 
-
-  smallMascot: {
-
-    width: 43,
-    height: 43,
-
-    borderRadius: 22,
-
+  headerImageWrap: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: "#861F41",
-
     justifyContent: "center",
     alignItems: "center",
-
     marginRight: 12,
-
+    overflow: "hidden",
   },
 
-
-  smallBird: {
-    fontSize: 25,
+  headerBirdImage: {
+    width: 40,
+    height: 40,
   },
 
-
-  assistantName: {
-
+  name: {
     color: "#FFFFFF",
-
     fontSize: 17,
     fontWeight: "900",
-
   },
-
 
   status: {
-
     marginTop: 2,
-
     color: "#39FF14",
-
     fontSize: 11,
-
   },
 
-
-  closeButton: {
-
-    color: "#AAAAAA",
-
+  close: {
+    color: "#FFFFFF",
     fontSize: 32,
-    fontWeight: "300",
-
   },
 
+  heroPanel: {
+    alignItems: "center",
+    paddingTop: 14,
+    paddingBottom: 8,
+    paddingHorizontal: 18,
+    backgroundColor: "#181A19",
+    borderBottomWidth: 1,
+    borderBottomColor: "#2D322E",
+  },
+
+  heroImage: {
+    width: 95,
+    height: 95,
+    marginBottom: 8,
+  },
+
+  heroText: {
+    textAlign: "center",
+    color: "#C7C7C7",
+    fontSize: 13,
+    lineHeight: 18,
+  },
 
   messages: {
     flex: 1,
   },
 
-
-  messagesContent: {
-
-    paddingHorizontal: 16,
-    paddingVertical: 20,
-
+  messageContent: {
+    padding: 16,
   },
-
 
   messageBubble: {
-
     maxWidth: "82%",
-
     paddingHorizontal: 14,
     paddingVertical: 11,
-
     borderRadius: 15,
-
     marginBottom: 12,
-
   },
-
 
   botBubble: {
-
     alignSelf: "flex-start",
-
-    backgroundColor: "#232624",
-
-    borderWidth: 1,
-    borderColor: "#343A35",
-
+    backgroundColor: "#292C2A",
   },
-
 
   userBubble: {
-
     alignSelf: "flex-end",
-
     backgroundColor: "#861F41",
-
   },
-
 
   messageText: {
-
+    color: "#FFFFFF",
     fontSize: 14,
     lineHeight: 20,
-
   },
-
-
-  botText: {
-    color: "#E0E0E0",
-  },
-
-
-  userText: {
-    color: "#FFFFFF",
-  },
-
 
   inputArea: {
-
     flexDirection: "row",
-
     alignItems: "center",
-
-    paddingHorizontal: 15,
-    paddingVertical: 12,
-
+    padding: 14,
+    backgroundColor: "#202220",
     borderTopWidth: 1,
-    borderTopColor: "#303530",
-
-    backgroundColor: "#1D201E",
-
+    borderTopColor: "#333333",
   },
-
 
   input: {
-
     flex: 1,
-
     height: 46,
-
-    paddingHorizontal: 15,
-
+    backgroundColor: "#2C2F2D",
     borderRadius: 23,
-
-    backgroundColor: "#292D2A",
-
+    paddingHorizontal: 15,
     color: "#FFFFFF",
-
-    fontSize: 14,
-
   },
-
 
   sendButton: {
-
     width: 44,
     height: 44,
-
     marginLeft: 9,
-
     borderRadius: 22,
-
     backgroundColor: "#39FF14",
-
     justifyContent: "center",
     alignItems: "center",
-
   },
-
 
   sendText: {
-
-    color: "#101210",
-
-    fontSize: 23,
+    color: "#111111",
+    fontSize: 22,
     fontWeight: "900",
-
   },
-
 });
