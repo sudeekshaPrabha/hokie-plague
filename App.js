@@ -7,25 +7,17 @@ import JoinGameScreen from "./screens/JoinGameScreen";
 import QueueScreen from "./screens/QueueScreen";
 import MapScreen from "./screens/MapScreen";
 
-
 export default function App() {
-
   const [currentScreen, setCurrentScreen] = useState("intro");
-
   const [previousScreen, setPreviousScreen] = useState("join");
-
   const [playerName, setPlayerName] = useState("");
-
-  const [roomCode, setRoomCode] = useState("");
-
 
   // =====================================================
   // SIDE NAVIGATION
   // =====================================================
 
   const navigateTo = (screen) => {
-
-    // If opening Rules, remember where the player came from
+    // Remember where the player was before opening Rules
     if (screen === "rules") {
       setPreviousScreen(currentScreen);
     }
@@ -33,54 +25,40 @@ export default function App() {
     setCurrentScreen(screen);
   };
 
-
   // =====================================================
   // INTRO
   // =====================================================
 
   if (currentScreen === "intro") {
-
     return (
       <IntroScreen
         onFinish={() => setCurrentScreen("login")}
       />
     );
-
   }
-
 
   // =====================================================
   // LOGIN
   // =====================================================
 
   if (currentScreen === "login") {
-
     return (
       <LoginScreen
-
         onContinue={(name) => {
-
           setPlayerName(name);
-
           setCurrentScreen("join");
-
         }}
-
       />
     );
-
   }
-
 
   // =====================================================
   // RULES
   // =====================================================
 
   if (currentScreen === "rules") {
-
     return (
       <RulesScreen
-
         onBack={() => {
           setCurrentScreen(previousScreen);
         }}
@@ -88,111 +66,70 @@ export default function App() {
         onContinue={() => {
           setCurrentScreen(previousScreen);
         }}
-
       />
     );
-
   }
-
 
   // =====================================================
   // JOIN GAME
   // =====================================================
 
   if (currentScreen === "join") {
-
     return (
       <JoinGameScreen
-
         playerName={playerName}
 
-        onJoin={(code) => {
-
-          setRoomCode(code);
-
+        onJoin={() => {
           setCurrentScreen("queue");
-
         }}
 
         onNavigate={navigateTo}
 
         onLeave={() => {
-
           setPlayerName("");
-
-          setRoomCode("");
-
           setCurrentScreen("login");
-
         }}
-
       />
     );
-
   }
-
 
   // =====================================================
   // QUEUE / PLAYERS
   // =====================================================
 
   if (currentScreen === "queue") {
-
     return (
       <QueueScreen
-
         playerName={playerName}
-
-        roomCode={roomCode}
 
         onNavigate={navigateTo}
 
         onLeave={() => {
-
           setPlayerName("");
-
-          setRoomCode("");
-
           setCurrentScreen("login");
-
         }}
-
       />
     );
-
   }
-
 
   // =====================================================
   // MAP
   // =====================================================
 
   if (currentScreen === "map") {
-
     return (
       <MapScreen
-
         playerName={playerName}
-
-        roomCode={roomCode}
 
         onNavigate={navigateTo}
 
         onLeave={() => {
-
           setPlayerName("");
-
-          setRoomCode("");
-
           setCurrentScreen("login");
-
         }}
-
       />
     );
-
   }
-
 
   return null;
 }

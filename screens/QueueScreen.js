@@ -11,7 +11,6 @@ import SideNav from "../components/SideNav";
 
 export default function QueueScreen({
   playerName,
-  roomCode,
   onNavigate,
   onLeave,
 }) {
@@ -28,28 +27,29 @@ export default function QueueScreen({
         onLeave={onLeave}
       />
 
-      {/* PLAGUE DECORATIONS */}
+      {/* GREEN PLAGUE DECORATIONS */}
       <Text style={[styles.plague, styles.plague1]}>〰</Text>
       <Text style={[styles.plague, styles.plague2]}>〰</Text>
       <Text style={[styles.plague, styles.plague3]}>〰</Text>
 
       {/* MAIN CONTENT */}
       <View style={styles.content}>
-        <Text style={styles.title}>WAITING FOR PLAYERS</Text>
+        <Text style={styles.title}>
+          WAITING FOR PLAYERS
+        </Text>
 
-        {/* GAME CODE */}
-        <View style={styles.codeBox}>
-          <Text style={styles.codeLabel}>GAME CODE</Text>
-          <Text style={styles.code}>{roomCode}</Text>
-        </View>
-
-        {/* PLAYERS */}
+        {/* PLAYER LIST */}
         <View style={styles.playerBox}>
-          <Text style={styles.playerTitle}>PLAYERS</Text>
+          <Text style={styles.playerTitle}>
+            PLAYERS
+          </Text>
 
           <View style={styles.playerRow}>
             <View style={styles.greenDot} />
-            <Text style={styles.playerName}>{playerName}</Text>
+
+            <Text style={styles.playerName}>
+              {playerName}
+            </Text>
           </View>
 
           <Text style={styles.waitingText}>
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     paddingHorizontal: 30,
-    paddingTop: 60,
+    paddingTop: 80,
   },
 
   title: {
@@ -109,36 +109,14 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
 
-  codeBox: {
-    width: "85%",
-    backgroundColor: "#202020",
-    borderWidth: 2,
-    borderColor: "#39FF14",
-    borderRadius: 15,
-    alignItems: "center",
-    paddingVertical: 18,
-    marginBottom: 25,
-  },
-
-  codeLabel: {
-    color: "#AAAAAA",
-    fontSize: 13,
-    fontWeight: "700",
-    letterSpacing: 2,
-  },
-
-  code: {
-    color: "#FFFFFF",
-    fontSize: 36,
-    fontWeight: "900",
-    letterSpacing: 8,
-    marginTop: 5,
-  },
-
   playerBox: {
     width: "85%",
     backgroundColor: "#202020",
+
+    borderWidth: 2,
+    borderColor: "#39FF14",
     borderRadius: 15,
+
     padding: 20,
   },
 
