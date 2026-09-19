@@ -6,12 +6,17 @@ import {
   StyleSheet,
 } from "react-native";
 
-export default function SideNav() {
+export default function SideNav({ onNavigate, onLeave }) {
   const [open, setOpen] = useState(false);
+
+  const goTo = (screen) => {
+    setOpen(false);
+    onNavigate(screen);
+  };
 
   return (
     <>
-      {/* HAMBURGER BUTTON */}
+      {/* HAMBURGER */}
       <Pressable
         style={styles.menuButton}
         onPress={() => setOpen(!open)}
@@ -19,24 +24,41 @@ export default function SideNav() {
         <Text style={styles.menuIcon}>☰</Text>
       </Pressable>
 
-      {/* SIDE MENU */}
+      {/* MENU */}
       {open && (
         <View style={styles.nav}>
           <Text style={styles.navTitle}>Hokie Plague</Text>
 
-          <Pressable style={styles.navItem}>
+          <Pressable
+            style={styles.navItem}
+            onPress={() => goTo("join")}
+          >
             <Text style={styles.navText}>Join Game</Text>
           </Pressable>
 
+          {/* We'll make RulesScreen later */}
           <Pressable style={styles.navItem}>
             <Text style={styles.navText}>Rules</Text>
           </Pressable>
 
-          <Pressable style={styles.navItem}>
+          <Pressable
+            style={styles.navItem}
+            onPress={() => goTo("queue")}
+          >
             <Text style={styles.navText}>Players</Text>
           </Pressable>
 
-          <Pressable style={styles.navItem}>
+          <Pressable
+            style={styles.navItem}
+            onPress={() => goTo("map")}
+          >
+            <Text style={styles.navText}>Map</Text>
+          </Pressable>
+
+          <Pressable
+            style={styles.navItem}
+            onPress={onLeave}
+          >
             <Text style={styles.leaveText}>Leave Game</Text>
           </Pressable>
         </View>
@@ -75,7 +97,6 @@ const styles = StyleSheet.create({
     paddingTop: 85,
     paddingHorizontal: 20,
     zIndex: 25,
-
     borderRightWidth: 2,
     borderRightColor: "#39FF14",
   },

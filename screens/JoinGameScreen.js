@@ -13,7 +13,12 @@ import {
 
 import SideNav from "../components/SideNav";
 
-export default function JoinGameScreen({ playerName, onJoin }) {
+export default function JoinGameScreen({
+  playerName,
+  onJoin,
+  onNavigate,
+  onLeave,
+}) {
   const [roomCode, setRoomCode] = useState("");
 
   const handleJoin = () => {
@@ -41,7 +46,10 @@ export default function JoinGameScreen({ playerName, onJoin }) {
         </View>
 
         {/* SIDE NAV */}
-        <SideNav />
+        <SideNav
+          onNavigate={onNavigate}
+          onLeave={onLeave}
+        />
 
         {/* PLAGUE DECORATIONS */}
         <Text style={[styles.plague, styles.plague1]}>〰</Text>
@@ -103,10 +111,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#861F41",
     justifyContent: "center",
     alignItems: "center",
-
     borderBottomWidth: 3,
     borderBottomColor: "#65152F",
-
     zIndex: 10,
   },
 
@@ -141,20 +147,15 @@ const styles = StyleSheet.create({
   input: {
     width: "82%",
     height: 55,
-
     backgroundColor: "#202020",
-
     borderWidth: 2,
     borderColor: "#39FF14",
     borderRadius: 12,
-
     color: "#FFFFFF",
     fontSize: 20,
     fontWeight: "700",
-
     textAlign: "center",
     letterSpacing: 4,
-
     marginBottom: 5,
   },
 
