@@ -1,48 +1,99 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from 'react';
 
-import IntroScreen from "./screens/IntroScreen";
-import LoginScreen from "./screens/LoginScreen";
-import JoinGameScreen from "./screens/JoinGameScreen";
+import {
+  Animated,
+  StyleSheet,
+  View,
+} from 'react-native';
+
+import IntroScreen from './screens/IntroScreen';
+import LoginScreen from './screens/LoginScreen';
+
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState("intro");
-  const [playerName, setPlayerName] = useState("");
 
+  const [currentScreen, setCurrentScreen] = useState('intro');
+
+  const loginOpacity = useRef(
+    new Animated.Value(0)
+  ).current;
+
+
+  // Called AFTER IntroScreen finishes fading to black
+  const goToLogin = () => {
+
+    setCurrentScreen('login');
+
+    loginOpacity.setValue(0);
+
+    // Small delay so LoginScreen mounts first
+    setTimeout(() => {
+
+      Animated.timing(loginOpacity, {
+        toValue: 1,
+        duration: 700,
+        useNativeDriver: true,
+      }).start();
+
+    }, 50);
+  };
+
+
+  // ==========================================
   // INTRO
-  if (currentScreen === "intro") {
+  // ==========================================
+
+  if (currentScreen === 'intro') {
+
     return (
       <IntroScreen
-        onEnter={() => setCurrentScreen("login")}
+        onFinish={goToLogin}
       />
     );
   }
 
+
+  // ==========================================
   // LOGIN
-  if (currentScreen === "login") {
+  // ==========================================
+
+  if (currentScreen === 'login') {
+
     return (
-      <LoginScreen
-        onContinue={(name) => {
-          setPlayerName(name);
-          setCurrentScreen("join");
-        }}
-      />
+
+      <View style={styles.blackBackground}>
+
+        <Animated.View
+          style={[
+            styles.fullScreen,
+            {
+              opacity: loginOpacity,
+            },
+          ]}
+        >
+
+          <LoginScreen />
+
+        </Animated.View>
+
+      </View>
     );
   }
 
-  // JOIN GAME
-  if (currentScreen === "join") {
-    return (
-      <JoinGameScreen
-        playerName={playerName}
-        onJoin={(code) => {
-          console.log("Joining game:", code);
-
-          // Queue will go here later
-          // setCurrentScreen("queue");
-        }}
-      />
-    );
-  }
 
   return null;
 }
+
+
+const styles = StyleSheet.create({
+
+  blackBackground: {
+    flex: 1,
+    backgroundColor: '#000000',
+  },
+
+  fullScreen: {
+    flex: 1,
+  },
+
+});
