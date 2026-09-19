@@ -1,11 +1,22 @@
+import React, { useState } from 'react';
+
 import IntroScreen from './screens/IntroScreen';
+import LoginScreen from './screens/LoginScreen';
 
 export default function App() {
-  return <IntroScreen />;
-}
+  const [currentScreen, setCurrentScreen] = useState('intro');
 
-import LoginScreen from "./screens/LoginScreen";
+  if (currentScreen === 'intro') {
+    return (
+      <IntroScreen
+        onEnter={() => setCurrentScreen('login')}
+      />
+    );
+  }
 
-export default function App() {
-  return <LoginScreen />;
+  if (currentScreen === 'login') {
+    return <LoginScreen />;
+  }
+
+  return null;
 }
