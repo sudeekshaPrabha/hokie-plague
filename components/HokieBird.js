@@ -203,7 +203,7 @@ export default function HokieBird() {
     ) {
 
       return (
-        "The game is played within the designated Drillfield game area. " +
+        "The game is played within the designated Data & Decision Structures building game area. " +
         "Stay inside the marked game boundaries throughout the round."
       );
 

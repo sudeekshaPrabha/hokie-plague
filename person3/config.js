@@ -1,7 +1,7 @@
 // The changeable numbers
 const config = {
 // Tagging
-TAG_RANGE_METERS : 2,  // How close players can be to tag
+TAG_RANGE_METERS : 5,  // How close players can be to tag
 TAG_COOLDOWN_SECONDS : 5*60, // Wait time btwn infect attempts
 
 // GPS

@@ -151,3 +151,4 @@ export default function MapScreen({ gameCode, playerId, meta = {}, onNavigate, o
     </SafeAreaView>
   );
 }
+

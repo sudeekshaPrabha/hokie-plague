@@ -1,162 +1,110 @@
 import React, { useState } from "react";
 import {
   View,
-  Text,
   TextInput,
   Pressable,
   StyleSheet,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Platform,
+  ImageBackground,
+  Dimensions,
 } from "react-native";
+
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("screen");
 
 export default function LoginScreen({ onContinue }) {
   const [name, setName] = useState("");
 
   const handleContinue = () => {
-    if (!name.trim()) return;
+    const trimmedName = name.trim();
 
-    onContinue(name.trim());
+    if (!trimmedName) return;
+
+    onContinue(trimmedName);
   };
 
   return (
-    <SafeAreaView style={styles.screen}>
-      <KeyboardAvoidingView
-        style={styles.screen}
-        behavior={Platform.OS === "ios" ? "padding" : undefined}
+    <View style={styles.screen}>
+      <ImageBackground
+        source={require("../assets/login-screen-background-latest.png")}
+        style={styles.background}
+        resizeMode="cover"
       >
-        {/* TOP BAR */}
-        <View style={styles.header}>
-          <Text style={styles.logo}>Hokie Plague</Text>
-        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Player Name"
+          placeholderTextColor="#777777"
+          value={name}
+          onChangeText={setName}
+          maxLength={20}
+          autoCapitalize="words"
+          autoCorrect={false}
+          returnKeyType="done"
+          onSubmitEditing={handleContinue}
+          selectionColor="#55FF20"
+        />
 
-        {/* GREEN DECORATIONS */}
-        <Text style={[styles.plague, styles.plague1]}>〰</Text>
-        <Text style={[styles.plague, styles.plague2]}>〰</Text>
-        <Text style={[styles.plague, styles.plague3]}>〰</Text>
-
-        <View style={styles.content}>
-          <Text style={styles.title}>ENTER YOUR NAME</Text>
-
-          <TextInput
-            style={styles.input}
-            placeholder="Player Name"
-            placeholderTextColor="#777"
-            value={name}
-            onChangeText={setName}
-            maxLength={20}
-          />
-
-          <Pressable
-            onPress={handleContinue}
-            disabled={!name.trim()}
-            style={({ pressed }) => [
-              styles.continueButton,
-              pressed && styles.pressed,
-              !name.trim() && styles.disabled,
-            ]}
-          >
-            <Text style={styles.continueText}>CONTINUE</Text>
-          </Pressable>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        <Pressable
+          onPress={handleContinue}
+          disabled={!name.trim()}
+          style={({ pressed }) => [
+            styles.continueButton,
+            pressed && styles.pressed,
+          ]}
+          accessibilityRole="button"
+          accessibilityLabel="Continue"
+        />
+      </ImageBackground>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#303030",
+    backgroundColor: "#101010",
+    overflow: "hidden",
   },
 
-  header: {
-    height: 85,
-    backgroundColor: "#861F41",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  logo: {
-    color: "#E87722",
-    fontSize: 34,
-    fontWeight: "900",
-  },
-
-  content: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 25,
-  },
-
-  title: {
-    color: "#FFFFFF",
-    fontSize: 20,
-    fontWeight: "800",
-    letterSpacing: 2,
-    marginBottom: 25,
+  background: {
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
   },
 
   input: {
-    width: "82%",
-    height: 55,
-    backgroundColor: "#202020",
-    color: "#FFFFFF",
+    position: "absolute",
+
+    top: SCREEN_HEIGHT * 0.475,
+    left: SCREEN_WIDTH * 0.16,
+
+    width: SCREEN_WIDTH * 0.68,
+    height: 58,
+
+    backgroundColor: "#171717",
+
     borderWidth: 2,
-    borderColor: "#39FF14",
+    borderColor: "#55FF20",
     borderRadius: 12,
-    fontSize: 18,
-    paddingHorizontal: 15,
-    marginBottom: 25,
+
+    color: "#FFFFFF",
+
+    fontSize: 19,
+
+    paddingHorizontal: 18,
+    paddingVertical: 0,
   },
 
   continueButton: {
-    backgroundColor: "#861F41",
-    borderWidth: 2,
-    borderColor: "#E87722",
-    borderRadius: 12,
-    height: 55,
-    width: 180,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+    position: "absolute",
 
-  continueText: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "900",
+    top: SCREEN_HEIGHT * 0.57,
+    left: SCREEN_WIDTH * 0.25,
+
+    width: SCREEN_WIDTH * 0.5,
+    height: 65,
+
+    backgroundColor: "transparent",
   },
 
   pressed: {
-    transform: [{ scale: 0.96 }],
-  },
-
-  disabled: {
-    opacity: 0.45,
-  },
-
-  plague: {
-    position: "absolute",
-    color: "#39FF14",
-    fontSize: 90,
-  },
-
-  plague1: {
-    top: 130,
-    left: 10,
-    transform: [{ rotate: "60deg" }],
-  },
-
-  plague2: {
-    top: 180,
-    right: 5,
-    transform: [{ rotate: "-60deg" }],
-  },
-
-  plague3: {
-    bottom: 60,
-    left: 110,
-    transform: [{ rotate: "20deg" }],
+    opacity: 0.6,
   },
 });

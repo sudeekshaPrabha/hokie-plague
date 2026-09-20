@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
 
   playerArea: {
     position: "absolute",
-    top: "54%",
+    top: "65%",
     left: "14%",
     right: "14%",
     alignItems: "center",
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
 
   countdownArea: {
     position: "absolute",
-    top: "68%",
+    top: "77%",
     left: 0,
     right: 0,
     alignItems: "center",
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
 
   forceButton: {
     position: "absolute",
-    top: "79%",
+    top: "88%",
     left: "29%",
     right: "29%",
     backgroundColor: "#861F41",
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
 
   devText: {
     position: "absolute",
-    top: "85%",
+    top: "94%",
     left: 0,
     right: 0,
     textAlign: "center",
