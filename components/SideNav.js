@@ -67,15 +67,7 @@ export default function SideNav({
             </Text>
           </Pressable>
 
-          {/* PLAYERS */}
-          <Pressable
-            style={styles.navItem}
-            onPress={() => goTo("queue")}
-          >
-            <Text style={styles.navText}>
-              Players
-            </Text>
-          </Pressable>
+          
 
           {/* MAP */}
           <Pressable
@@ -105,8 +97,8 @@ export default function SideNav({
 const styles = StyleSheet.create({
   menuButton: {
     position: "absolute",
-    top: 105,
-    left: 18,
+    top: 146,
+    left: 5,
 
     width: 48,
     height: 48,
@@ -123,14 +115,14 @@ const styles = StyleSheet.create({
 
   menuIcon: {
     color: "#FFFFFF",
-    fontSize: 28,
+    fontSize: 40,
     fontWeight: "900",
   },
 
   nav: {
     position: "absolute",
 
-    top: 85,
+    top: 144,
     left: 0,
     bottom: 0,
 
