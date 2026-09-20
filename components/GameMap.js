@@ -1,17 +1,19 @@
 import MapView, { Circle, Marker } from 'react-native-maps';
 
-export const DRILLFIELD = {latitude: 37.2284, longitude: -80.4234}; 
+//export const GAME_CENTER = {latitude: 37.231787, longitude: -80.426823};
+import { PLAY_AREA } from '../boundary';
+ 
 
-export default function GameMap({ safeZones = [], playArea, otherPlayers = [], style })
+export default function GameMap({ safeZones = [], deathZones = [], playArea, otherPlayers = [], style })
 {
     return (
         <MapView 
             style={[{ flex: 1 }, style]}
-            initialRegion={{ ...DRILLFIELD, latitudeDelta: 0.004, longitudeDelta: 0.004 }}
+            initialRegion={{ ...PLAY_AREA.center, latitudeDelta: 0.004, longitudeDelta: 0.004 }}
             showsUserLocation
         >
             {playArea && (
-                <Circle center={playArea.center} radius={playArea.radius} strokeWidth={2} strokeColor="#E87722" />
+                <Circle center={playArea.center} radius={playArea.radius} strokeWidth={3} strokeColor="#E87722" />
 
             )}
 
@@ -26,6 +28,17 @@ export default function GameMap({ safeZones = [], playArea, otherPlayers = [], s
                     />
 
             ))}
+
+            {deathZones.map((z) => (
+                <Circle
+                    key={z.id}
+                    center={z.center}
+                    radius={z.radius ?? 20}
+                    strokeColor="#FF3B3B"
+                    fillColor="rgba(255,59,59,0.2)"
+                />
+            ))}
+
 
             {otherPlayers.map((p) => (
                 <Marker
