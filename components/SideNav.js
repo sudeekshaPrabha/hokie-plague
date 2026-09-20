@@ -105,7 +105,7 @@ export default function SideNav({
 const styles = StyleSheet.create({
   menuButton: {
     position: "absolute",
-    top: 105,
+    top: 125,
     left: 18,
 
     width: 48,
