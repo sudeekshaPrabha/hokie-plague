@@ -1,6 +1,10 @@
 const assert = require('assert');
+const config = require('./config');                                   // NEW
 const { distanceMeters } = require('./geo');
-const { canTag, isStale, PLAGUER, SURVIVOR } = require('./rules');
+const { canTag, isStale, checkBounds, PLAGUER, SURVIVOR } = require('./rules');
+
+const LIMIT_S = config.OUT_OF_BOUNDS_SECONDS;                         // NEW
+const LIMIT_MS = LIMIT_S * 1000;                                      // NEW
 
 const now = Date.now();
 const base = { lat: 37.2296, lng: -80.4139, updatedAt: now, eliminated: false };
@@ -37,5 +41,30 @@ assert.strictEqual(canTag({ ...plaguer, eliminated: true }, nearby, now).reason,
 // new player with no GPS fix yet (lat/lng missing)
 const noGps = { id: 'd', team: SURVIVOR, updatedAt: now, eliminated: false };
 assert.strictEqual(canTag(plaguer, noGps, now).reason, 'no-position');
+
+// ---- out of bounds ----
+const area = { lat: 37.2296, lng: -80.4139, radius: 100 };
+const inside  = { ...base };                       // at the center
+const outside = { ...base, lat: 37.2316 };         // ~220 m north
+
+assert.strictEqual(checkBounds(inside, area, null, now).status, 'inside');
+assert.strictEqual(checkBounds(inside, area, now - 5000, now).outOfBoundsSince, null); // reset
+
+// just left: timer starts, full limit left                            // CHANGED
+let r = checkBounds(outside, area, undefined, now);
+assert.strictEqual(r.status, 'warning');
+assert.strictEqual(r.secondsLeft, LIMIT_S);                           // CHANGED
+assert.strictEqual(r.outOfBoundsSince, now);
+
+// 3 s later                                                           // CHANGED
+r = checkBounds(outside, area, now - 3000, now);
+assert.strictEqual(r.secondsLeft, LIMIT_S - 3);                       // CHANGED
+
+// at the limit: eliminated; 1 s before: still warning                 // CHANGED
+assert.strictEqual(checkBounds(outside, area, now - LIMIT_MS, now).status, 'eliminated');
+assert.strictEqual(checkBounds(outside, area, now - (LIMIT_MS - 1000), now).status, 'warning');
+
+// no GPS fix: no elimination, timer untouched
+assert.strictEqual(checkBounds({ id: 'x' }, area, now - 20000, now).status, 'no-position');
 
 console.log('All tests passed');
