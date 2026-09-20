@@ -11,12 +11,14 @@ import SideNav from "../components/SideNav";
 
 export default function QueueScreen({
   playerName,
+  players = [],
   onNavigate,
   onLeave,
   onForceStart,
+  
 }) {
   // TEMPORARY player count until multiplayer is connected
-  const playerCount = 1;
+  const playerCount = Math.max(1, players.length);
   const maxPlayers = 8;
 
   // TEMPORARY countdown
@@ -88,14 +90,16 @@ export default function QueueScreen({
               style={[
                 styles.progressFill,
                 {
-                  width: `${(playerCount / maxPlayers) * 100}%`,
+                    width: `${Math.min(100, (playerCount / maxPlayers) * 100)}%`,
                 },
               ]}
             />
           </View>
 
-          <Text style={styles.youText}>
-            {playerName} joined
+        <Text style={styles.youText}>
+            {players.length
+              ? players.map((p) => p.name).join(", ")
+              : `${playerName} joined`}
           </Text>
 
         </View>

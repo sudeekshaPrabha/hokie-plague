@@ -44,3 +44,14 @@ export function fitZone(center, zoneRadius, area = PLAY_AREA) {
     radius: zoneRadius,
   };
 }
+
+// Shift a point by a random distance up to maxMeters, so the exact spot isn't revealed
+export function fuzzPoint(p, maxMeters = 15) {
+  const r = maxMeters * Math.sqrt(Math.random());
+  const t = Math.random() * 2 * Math.PI;
+  return {
+    latitude: p.latitude + (r * Math.cos(t)) / M_PER_DEG,
+    longitude:
+      p.longitude + (r * Math.sin(t)) / (M_PER_DEG * Math.cos((p.latitude * Math.PI) / 180)),
+  };
+}

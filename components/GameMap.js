@@ -17,17 +17,20 @@ export default function GameMap({ safeZones = [], deathZones = [], playArea, oth
 
             )}
 
-            {safeZones.map((z) => (
-                <Circle
-                    key={z.id}
-                    center={z.center}
-                    radius={z.radius ?? 30}
-                    strokeColor = "#64FF70"
-                    lineDashPattern={[6, 6]}
-                    fillColor = "rgba(100,255,112,0.15)"
-                    />
-
-            ))}
+            {safeZones.map((z) => {
+  const dim = z.flashing && z.blink; // flashing = protection almost over
+  return (
+    <Circle
+      key={z.id}
+      center={z.center}
+      radius={z.radius ?? 15}
+      strokeColor={dim ? "rgba(100,255,112,0.2)" : "#64FF70"}
+      lineDashPattern={[6, 6]}
+      fillColor={dim ? "rgba(100,255,112,0.03)" : "rgba(100,255,112,0.15)"}
+    />
+  );
+})}
+            
 
             {deathZones.map((z) => (
                 <Circle
