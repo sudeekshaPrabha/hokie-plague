@@ -1,14 +1,16 @@
 import React from "react";
+
 import {
-  View,
-  Text,
-  Image,
+  ImageBackground,
   Pressable,
-  StyleSheet,
   SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
 import SideNav from "../components/SideNav";
+
 
 export default function JoinGameScreen({
   playerName,
@@ -16,143 +18,352 @@ export default function JoinGameScreen({
   onNavigate,
   onLeave,
 }) {
+
+
+  // =====================================================
+  // JOIN GAME
+  // =====================================================
+
   const handleJoin = () => {
-    console.log("Joining game as:", playerName);
+
+    console.log(
+      "Joining game as:",
+      playerName
+    );
+
 
     if (onJoin) {
       onJoin();
     }
+
   };
 
+
   return (
+
     <SafeAreaView style={styles.screen}>
-      {/* HEADER */}
-      <View style={styles.header}>
-        <Text style={styles.logo}>Hokie Plague</Text>
-      </View>
 
-      {/* SIDE NAV */}
-      <SideNav
-        onNavigate={onNavigate}
-        onLeave={onLeave}
-      />
 
-      {/* GREEN PLAGUE DECORATIONS */}
-      <Text style={[styles.plague, styles.plague1]}>〰</Text>
-      <Text style={[styles.plague, styles.plague2]}>〰</Text>
-      <Text style={[styles.plague, styles.plague3]}>〰</Text>
-      <Text style={[styles.plague, styles.plague4]}>〰</Text>
-      <Text style={[styles.plague, styles.plague5]}>〰</Text>
+      {/* =================================================
+          FULL SCREEN ARTWORK
+      ================================================= */}
 
-      {/* MAIN CONTENT */}
-      <View style={styles.content}>
-        <Text style={styles.welcome}>
-          Welcome, {playerName}
-        </Text>
+      <ImageBackground
 
-        {/* ZOMBIE JOIN BUTTON */}
-        <Pressable
-          onPress={handleJoin}
-          style={({ pressed }) => [
-            styles.joinButton,
-            pressed && styles.pressed,
-          ]}
+        source={require(
+          "../assets/join_screen_background.png"
+        )}
+
+        style={styles.background}
+
+        resizeMode="cover"
+
+      >
+
+
+        {/* =================================================
+            SIDE NAV
+
+            The real SideNav button sits over the
+            hamburger graphic in the artwork.
+        ================================================= */}
+
+        <SideNav
+          onNavigate={onNavigate}
+          onLeave={onLeave}
+        />
+
+
+        {/* =================================================
+            PLAYER WELCOME
+
+            Kept as real text so the player's actual
+            name can appear.
+        ================================================= */}
+
+        <View
+          pointerEvents="none"
+          style={styles.welcomeArea}
         >
-          <Image
-            source={require("../assets/join_button.png")}
-            style={styles.joinImage}
-            resizeMode="contain"
-          />
-        </Pressable>
-      </View>
+
+          <Text style={styles.welcome}>
+            Welcome, {playerName}
+          </Text>
+
+
+          <View style={styles.welcomeLine} />
+
+
+          <Text style={styles.subtitle}>
+            Join a round to survive the outbreak.
+          </Text>
+
+        </View>
+
+
+        {/* =================================================
+            JOIN BUTTON
+
+            Invisible Pressable positioned directly
+            over the JOIN sign in the artwork.
+        ================================================= */}
+
+        <Pressable
+
+          accessibilityRole="button"
+
+          accessibilityLabel="Join game"
+
+          onPress={handleJoin}
+
+          style={({ pressed }) => [
+
+            styles.joinButton,
+
+            pressed &&
+              styles.joinButtonPressed,
+
+          ]}
+
+        />
+
+
+        {/* =================================================
+            SMALL JOIN HINT
+        ================================================= */}
+
+        <View
+          pointerEvents="none"
+          style={styles.joinHintContainer}
+        >
+
+          <Text style={styles.joinHint}>
+            TAP JOIN TO ENTER
+          </Text>
+
+        </View>
+
+
+      </ImageBackground>
+
+
     </SafeAreaView>
+
   );
+
 }
 
+
+// =====================================================
+// STYLES
+// =====================================================
+
 const styles = StyleSheet.create({
+
+
+  // ====================================================
+  // SCREEN
+  // ====================================================
+
   screen: {
+
     flex: 1,
-    backgroundColor: "#303030",
+
+    backgroundColor: "#080A09",
+
   },
 
-  header: {
-    height: 85,
-    backgroundColor: "#861F41",
-    justifyContent: "center",
-    alignItems: "center",
-    borderBottomWidth: 3,
-    borderBottomColor: "#65152F",
-    zIndex: 10,
-  },
 
-  logo: {
-    color: "#E87722",
-    fontSize: 34,
-    fontWeight: "900",
-  },
+  // ====================================================
+  // BACKGROUND IMAGE
+  // ====================================================
 
-  content: {
+  background: {
+
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 25,
+
+    width: "100%",
+
+    height: "100%",
+
   },
+
+
+  // ====================================================
+  // WELCOME MESSAGE
+  // ====================================================
+
+  welcomeArea: {
+
+    position: "absolute",
+
+    top: "22%",
+
+    left: 20,
+    right: 20,
+
+    alignItems: "center",
+
+    zIndex: 8,
+
+  },
+
 
   welcome: {
+
     color: "#FFFFFF",
-    fontSize: 20,
-    fontWeight: "700",
-    marginBottom: 5,
+
+    fontSize: 31,
+
+    fontWeight: "900",
+
+    textAlign: "center",
+
+
+    textShadowColor:
+      "rgba(0, 0, 0, 0.95)",
+
+    textShadowOffset: {
+      width: 0,
+      height: 3,
+    },
+
+    textShadowRadius: 7,
+
   },
+
+
+  welcomeLine: {
+
+    width: 130,
+
+    height: 3,
+
+    marginTop: 9,
+
+    borderRadius: 3,
+
+    backgroundColor: "#65FF45",
+
+
+    shadowColor: "#65FF45",
+
+    shadowOpacity: 1,
+
+    shadowRadius: 7,
+
+  },
+
+
+  subtitle: {
+
+    marginTop: 11,
+
+    color: "#D7D7D7",
+
+    fontSize: 14,
+
+    fontWeight: "600",
+
+    letterSpacing: 0.4,
+
+    textAlign: "center",
+
+
+    textShadowColor:
+      "rgba(0, 0, 0, 1)",
+
+    textShadowOffset: {
+      width: 0,
+      height: 2,
+    },
+
+    textShadowRadius: 5,
+
+  },
+
+
+  // ====================================================
+  // JOIN CLICK AREA
+  //
+  // This is transparent and positioned over the large
+  // JOIN sign in the background artwork.
+  // ====================================================
 
   joinButton: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
 
-  joinImage: {
-    width: 360,
-    height: 330,
-  },
-
-  pressed: {
-    transform: [{ scale: 0.96 }],
-  },
-
-  plague: {
     position: "absolute",
-    color: "#39FF14",
-    fontSize: 95,
-    zIndex: 0,
+
+    top: "40%",
+
+    left: "18%",
+
+    right: "18%",
+
+    height: "23%",
+
+    borderRadius: 28,
+
+    zIndex: 15,
+
   },
 
-  plague1: {
-    top: 120,
-    left: 5,
-    transform: [{ rotate: "60deg" }],
+
+  joinButtonPressed: {
+
+    backgroundColor:
+      "rgba(101, 255, 69, 0.10)",
+
+    transform: [
+      {
+        scale: 0.97,
+      },
+    ],
+
   },
 
-  plague2: {
-    top: 185,
+
+  // ====================================================
+  // JOIN HINT
+  // ====================================================
+
+  joinHintContainer: {
+
+    position: "absolute",
+
+    top: "64%",
+
+    left: 0,
     right: 0,
-    transform: [{ rotate: "-60deg" }],
+
+    alignItems: "center",
+
+    zIndex: 8,
+
   },
 
-  plague3: {
-    bottom: 170,
-    left: 5,
-    transform: [{ rotate: "45deg" }],
+
+  joinHint: {
+
+    color:
+      "rgba(255, 255, 255, 0.62)",
+
+    fontSize: 10,
+
+    fontWeight: "800",
+
+    letterSpacing: 2,
+
+    textShadowColor:
+      "rgba(0, 0, 0, 1)",
+
+    textShadowOffset: {
+      width: 0,
+      height: 1,
+    },
+
+    textShadowRadius: 4,
+
   },
 
-  plague4: {
-    bottom: 90,
-    right: 5,
-    transform: [{ rotate: "-45deg" }],
-  },
-
-  plague5: {
-    bottom: 25,
-    left: 110,
-    transform: [{ rotate: "15deg" }],
-  },
 });
