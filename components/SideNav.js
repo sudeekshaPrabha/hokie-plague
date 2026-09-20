@@ -67,15 +67,7 @@ export default function SideNav({
             </Text>
           </Pressable>
 
-          {/* PLAYERS */}
-          <Pressable
-            style={styles.navItem}
-            onPress={() => goTo("queue")}
-          >
-            <Text style={styles.navText}>
-              Players
-            </Text>
-          </Pressable>
+          
 
           {/* MAP */}
           <Pressable
