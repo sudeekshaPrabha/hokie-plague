@@ -15,7 +15,7 @@ export default function RoleRevealScreen({
       if (onFinish) {
         onFinish();
       }
-    }, 3000);
+    }, 7000);
 
     return () => clearTimeout(timer);
   }, [onFinish]);
