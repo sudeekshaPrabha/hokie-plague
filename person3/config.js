@@ -21,8 +21,12 @@ DEATH_ZONE_RADIUS_METERS: 25,
 DEATH_ZONE_FUZZ_METERS: 15, 
 
 //Round 
-SPREAD_OUT_SECONDS : 15, 
+ 
+
+SPREAD_OUT_SECONDS : 5*60, 
 
 ROUND_DURATION_SECONDS : 30*60
+
 };
 module.exports = config; // How file shares with other files
+
