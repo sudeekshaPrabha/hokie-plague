@@ -1,28 +1,42 @@
 // rules.js
-// A player looks like:
-// { id, name, team: 'plaguer' | 'survivor' | 'eliminated',
-//   lat, lng, updatedAt (ms), lastTagAt (ms or null), outOfBoundsSince (ms or null) }
+// A player looks like (matches game.js):
+// { id, name, team: 'infected' | 'noninfected', eliminated: true/false,
+//   lat, lng, updatedAt (ms), lastTagAt (ms, may be undefined),
+//   outOfBoundsSince (ms, may be undefined) }
 
 const config = require('./config');
 const { distanceMeters } = require('./geo');
 
-/**
- * Determines if player's location is old
- * @param {*} player 
- * @param {*} now 
- * @returns true or false prob
- */
+// Team names live here so a rename is a one-line fix.
+const PLAGUER = 'infected';      // CONFIRM with teammate
+const SURVIVOR = 'noninfected';
+
+function hasPosition(p) {
+  return typeof p.lat === 'number' && typeof p.lng === 'number';
+}
+
+// A position is stale if it's older than the config limit,
+// or if there's no timestamp at all.
 function isStale(player, now) {
+  if (typeof player.updatedAt !== 'number') return true;
   return now - player.updatedAt > config.STALE_POSITION_SECONDS * 1000;
 }
 
 // Returns { ok: true } or { ok: false, reason: '...' }
-// now is time
+// now = current time in ms (passed in so tests can control it)
 function canTag(tagger, target, now) {
-  if (tagger.team !== 'plaguer') return { ok: false, reason: 'not-plaguer' };  // Addresses mismatched roles
-  if (target.team !== 'survivor') return { ok: false, reason: 'bad-target' };
+  if (tagger.team !== PLAGUER || tagger.eliminated) {
+    return { ok: false, reason: 'not-plaguer' };
+  }
+  if (target.team !== SURVIVOR || target.eliminated) {
+    return { ok: false, reason: 'bad-target' };
+  }
 
-  if (isStale(tagger, now) || isStale(target, now)) { // Old position invalid
+  if (!hasPosition(tagger) || !hasPosition(target)) {
+    return { ok: false, reason: 'no-position' };
+  }
+
+  if (isStale(tagger, now) || isStale(target, now)) {
     return { ok: false, reason: 'stale-position' };
   }
 
@@ -37,4 +51,4 @@ function canTag(tagger, target, now) {
   return { ok: true };
 }
 
-module.exports = { canTag, isStale };
+module.exports = { canTag, isStale, hasPosition, PLAGUER, SURVIVOR };
