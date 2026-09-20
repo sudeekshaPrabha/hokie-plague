@@ -1,16 +1,26 @@
 import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
 
 import IntroScreen from "./screens/IntroScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RulesScreen from "./screens/RulesScreen";
 import JoinGameScreen from "./screens/JoinGameScreen";
 import QueueScreen from "./screens/QueueScreen";
+import RoleRevealScreen from "./screens/RoleRevealScreen";
 import MapScreen from "./screens/MapScreen";
+
+import HokieBird from "./components/HokieBird";
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState("intro");
+
   const [previousScreen, setPreviousScreen] = useState("join");
+
   const [playerName, setPlayerName] = useState("");
+
+  // TEMP role until real multiplayer role assignment is added
+  const [playerRole, setPlayerRole] = useState("SURVIVOR");
+
 
   // =====================================================
   // SIDE NAVIGATION
@@ -25,111 +35,202 @@ export default function App() {
     setCurrentScreen(screen);
   };
 
-  // =====================================================
-  // INTRO
-  // =====================================================
-
-  if (currentScreen === "intro") {
-    return (
-      <IntroScreen
-        onFinish={() => setCurrentScreen("login")}
-      />
-    );
-  }
 
   // =====================================================
-  // LOGIN
+  // TEMPORARY GAME START
   // =====================================================
 
-  if (currentScreen === "login") {
-    return (
-      <LoginScreen
-        onContinue={(name) => {
-          setPlayerName(name);
-          setCurrentScreen("join");
-        }}
-      />
-    );
-  }
+  const startGame = () => {
+    // Temporary role assignment for testing
+    const randomRole =
+      Math.random() < 0.25
+        ? "PLAGUER"
+        : "SURVIVOR";
+
+    setPlayerRole(randomRole);
+
+    // Go to role reveal
+    setCurrentScreen("role");
+  };
+
 
   // =====================================================
-  // RULES
+  // SCREEN RENDERING
   // =====================================================
 
-  if (currentScreen === "rules") {
-    return (
-      <RulesScreen
-        onBack={() => {
-          setCurrentScreen(previousScreen);
-        }}
+  const renderCurrentScreen = () => {
 
-        onContinue={() => {
-          setCurrentScreen(previousScreen);
-        }}
-      />
-    );
-  }
+
+    // ===================================================
+    // INTRO
+    // ===================================================
+
+    if (currentScreen === "intro") {
+      return (
+        <IntroScreen
+          onFinish={() => setCurrentScreen("login")}
+        />
+      );
+    }
+
+
+    // ===================================================
+    // LOGIN
+    // ===================================================
+
+    if (currentScreen === "login") {
+      return (
+        <LoginScreen
+          onContinue={(name) => {
+            setPlayerName(name);
+
+            setCurrentScreen("join");
+          }}
+        />
+      );
+    }
+
+
+    // ===================================================
+    // RULES
+    // ===================================================
+
+    if (currentScreen === "rules") {
+      return (
+        <RulesScreen
+          onBack={() => {
+            setCurrentScreen(previousScreen);
+          }}
+
+          onContinue={() => {
+            setCurrentScreen(previousScreen);
+          }}
+        />
+      );
+    }
+
+
+    // ===================================================
+    // JOIN GAME
+    // ===================================================
+
+    if (currentScreen === "join") {
+      return (
+        <JoinGameScreen
+          playerName={playerName}
+
+          onJoin={() => {
+            setCurrentScreen("queue");
+          }}
+
+          onNavigate={navigateTo}
+
+          onLeave={() => {
+            setPlayerName("");
+
+            setCurrentScreen("login");
+          }}
+        />
+      );
+    }
+
+
+    // ===================================================
+    // QUEUE / PLAYERS
+    // ===================================================
+
+    if (currentScreen === "queue") {
+      return (
+        <QueueScreen
+          playerName={playerName}
+
+          onNavigate={navigateTo}
+
+          onLeave={() => {
+            setPlayerName("");
+
+            setCurrentScreen("login");
+          }}
+
+          // TEMPORARY FORCE START
+          onForceStart={startGame}
+        />
+      );
+    }
+
+
+    // ROLE REVEAL
+    if (currentScreen === "role") {
+      return (
+        <RoleRevealScreen
+          role={playerRole}
+
+          onFinish={() => {
+            setCurrentScreen("map");
+          }}
+        />
+      );
+    }
+
+
+    // ===================================================
+    // MAP
+    // ===================================================
+
+    if (currentScreen === "map") {
+      return (
+        <MapScreen
+          playerName={playerName}
+
+          onNavigate={navigateTo}
+
+          onLeave={() => {
+            setPlayerName("");
+
+            setCurrentScreen("login");
+          }}
+        />
+      );
+    }
+
+
+    return null;
+  };
+
 
   // =====================================================
-  // JOIN GAME
+  // WHOLE APP
   // =====================================================
 
-  if (currentScreen === "join") {
-    return (
-      <JoinGameScreen
-        playerName={playerName}
+  return (
+    <View style={styles.app}>
 
-        onJoin={() => {
-          setCurrentScreen("queue");
-        }}
+      {/* CURRENT SCREEN */}
+      {renderCurrentScreen()}
 
-        onNavigate={navigateTo}
 
-        onLeave={() => {
-          setPlayerName("");
-          setCurrentScreen("login");
-        }}
-      />
-    );
-  }
+      {/* =================================================
+          HOKIE BIRD AI
 
-  // =====================================================
-  // QUEUE / PLAYERS
-  // =====================================================
+          Stays mounted throughout the app so chat history
+          is preserved when switching between pages.
 
-  if (currentScreen === "queue") {
-    return (
-      <QueueScreen
-        playerName={playerName}
+          Hidden during the cinematic intro.
+      ================================================= */}
 
-        onNavigate={navigateTo}
+      {currentScreen !== "intro" && (
+        <HokieBird />
+      )}
 
-        onLeave={() => {
-          setPlayerName("");
-          setCurrentScreen("login");
-        }}
-      />
-    );
-  }
-
-  // =====================================================
-  // MAP
-  // =====================================================
-
-  if (currentScreen === "map") {
-    return (
-      <MapScreen
-        playerName={playerName}
-
-        onNavigate={navigateTo}
-
-        onLeave={() => {
-          setPlayerName("");
-          setCurrentScreen("login");
-        }}
-      />
-    );
-  }
-
-  return null;
+    </View>
+  );
 }
+
+
+const styles = StyleSheet.create({
+  app: {
+    flex: 1,
+
+    backgroundColor: "#111312",
+  },
+});
